@@ -9,7 +9,7 @@ import com.tokenbid.models.Bid;
 import com.tokenbid.repositories.BidRepository;
 
 @Service
-public class BidService extends IService<Bid> {
+public class BidService implements IService<Bid> {
     private BidRepository bidRepository;
 
     @Autowired

@@ -20,7 +20,7 @@ import com.tokenbid.services.ItemService;
 
 @RestController
 @RequestMapping("/items")
-public class ItemController extends IController<Item> {
+public class ItemController implements IController<Item> {
     private ItemService itemService;
 
     @Autowired

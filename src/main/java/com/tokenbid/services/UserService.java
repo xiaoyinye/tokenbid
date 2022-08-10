@@ -9,7 +9,7 @@ import com.tokenbid.models.User;
 import com.tokenbid.repositories.UserRepository;
 
 @Service
-public class UserService extends IService<User> {
+public class UserService implements IService<User> {
     private UserRepository userRepository;
 
     @Autowired
@@ -48,5 +48,9 @@ public class UserService extends IService<User> {
     @Override
     public List<User> getAll() {
         return userRepository.findAll();
+    }
+
+    public void tesMethod() {
+        System.out.println("tesMethod");
     }
 }

@@ -9,7 +9,7 @@ import com.tokenbid.models.Auction;
 import com.tokenbid.repositories.AuctionRepository;
 
 @Service
-public class AuctionService extends IService<Auction> {
+public class AuctionService implements IService<Auction> {
     private AuctionRepository auctionRepository;
 
     @Autowired
@@ -48,5 +48,9 @@ public class AuctionService extends IService<Auction> {
     @Override
     public List<Auction> getAll() {
         return auctionRepository.findAll();
+    }
+
+    public void testMessage() {
+        System.out.println("AuctionService.testMessage()");
     }
 }

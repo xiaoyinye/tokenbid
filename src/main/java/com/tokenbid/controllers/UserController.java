@@ -20,7 +20,7 @@ import com.tokenbid.services.UserService;
 
 @RestController
 @RequestMapping("/users")
-public class UserController extends IController<User> {
+public class UserController implements IController<User> {
     private UserService userService;
 
     @Autowired

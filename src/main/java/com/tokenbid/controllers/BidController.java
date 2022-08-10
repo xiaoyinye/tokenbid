@@ -20,7 +20,7 @@ import com.tokenbid.services.BidService;
 
 @RestController
 @RequestMapping("/bids")
-public class BidController extends IController<Bid> {
+public class BidController implements IController<Bid> {
     private BidService bidService;
 
     @Autowired
