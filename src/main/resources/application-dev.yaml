@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    username: postgres
+    password: 1121Postgres!
+    url: jdbc:postgresql://localhost:5432/tokenbid
+    driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
