@@ -40,5 +40,5 @@ public class User {
     private int tokens;
 
     @Column(name = "email_verified")
-    private boolean email_verified = false;
+    private boolean emailVerified = false;
 }

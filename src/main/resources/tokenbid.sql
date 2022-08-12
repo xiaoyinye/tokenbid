@@ -5,7 +5,8 @@ create table if not exists users(
 	first_name varchar(50) not null,
 	last_name varchar(50) not null,
 	email varchar(100) not null unique,
-	tokens int DEFAULT 0 check(tokens >= 0)
+	tokens int default 0 check(tokens >= 0)
+	email_verified boolean default false
 );
 
 create table if not exists items(
