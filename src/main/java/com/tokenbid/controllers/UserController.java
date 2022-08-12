@@ -82,10 +82,11 @@ public class UserController implements IController<User> {
      * @return Status code 204 if user is found and email is verified, otherwise 404
      */
     @GetMapping(path = "/{id}/verify")
-    public ResponseEntity<Boolean> verifyUser(@PathVariable("id") int id) {
+    public ResponseEntity<String> verifyUser(@PathVariable("id") int id) {
         if (userService.getById(id) != null &&
                 userService.verifyUserAndAddFreeTokens(id)) {
-            return ResponseEntity.noContent().build();
+            String message = "Your email has been verified. Enjoy 250 free tokens :)";
+            return ResponseEntity.ok(message);
         }
 
         return ResponseEntity.notFound().build();
