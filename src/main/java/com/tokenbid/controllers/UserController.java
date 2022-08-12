@@ -23,12 +23,10 @@ import com.tokenbid.services.UserService;
 @RequestMapping("/users")
 public class UserController implements IController<User> {
     private UserService userService;
-    private EmailService emailService;
 
     @Autowired
-    public UserController(UserService userService, EmailService emailService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.emailService = emailService;
     }
 
     @Override
