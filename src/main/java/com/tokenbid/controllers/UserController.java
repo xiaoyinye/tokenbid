@@ -37,7 +37,8 @@ public class UserController implements IController<User> {
     @Override
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<Boolean> update(@PathVariable("id") int id, @RequestBody User updatedUser) {
-        if (userService.getById(id) != null) {
+        if (userService.getById(id) != null &&
+                userService.getById(id).isEmailVerified()) {
             updatedUser.setUserId(id);
             userService.update(updatedUser);
             return ResponseEntity.noContent().build();

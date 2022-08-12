@@ -18,14 +18,14 @@ public class UserService implements IService<User> {
     }
 
     @Override
-    public int add(User item) {
-        return userRepository.save(item).getUserId();
+    public int add(User user) {
+        return userRepository.save(user).getUserId();
     }
 
     @Override
-    public void update(User item) {
-        if (userRepository.findById(item.getUserId()).isPresent()) {
-            userRepository.save(item);
+    public void update(User user) {
+        if (userRepository.findById(user.getUserId()).isPresent()) {
+            userRepository.save(user);
         }
     }
 
