@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import com.tokenbid.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -76,15 +75,18 @@ public class UserController implements IController<User> {
     }
 
     /**
-     * Mapper for Add token and set email_verified as true after successful registration
+     * Verifies user's email address and adds 250 tokens to user account.
+     * 
+     * @param id The user's id.
+     * @return Status code 204 if user is found and email is verified, otherwise 404
      */
-    @PutMapping(path = "/{id}/add-token", consumes = "application/json")
-    public ResponseEntity<Boolean> addToken(@PathVariable("id") int userId) {
-
-        if(userService.getById(userId) != null){
-            userService.addTokenToUserAccount(userId);
+    @GetMapping(path = "/{id}/verify")
+    public ResponseEntity<Boolean> verifyUser(@PathVariable("id") int id) {
+        if (userService.getById(id) != null &&
+                userService.verifyUserAndAddFreeTokens(id)) {
             return ResponseEntity.noContent().build();
         }
+
         return ResponseEntity.notFound().build();
     }
 }
