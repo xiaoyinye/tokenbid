@@ -813,3 +813,32 @@ a.button {
 #bid-form{
   display: none;
 }
+
+.nav {
+  position: absolute;
+	float: left;
+	overflow: hidden;
+	border: 2px solid black;
+  border-radius: 5px;
+	border-style: outset;
+	background-color:  #73bbff;
+	font-family: 'Fira Sans', sans-serif;
+  }
+  
+  /* Navbar links */
+  .nav a {
+	float: left;
+	color: black;
+	text-align: center;
+	padding: 14px 16px;;
+	text-decoration: none;
+	font-size: 17px;
+	transition: .4s;
+	cursor: pointer;
+  }
+  
+  .nav a:hover {
+	background-color:  #307fc9 ;
+	color: white;
+  }
+
