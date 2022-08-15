@@ -17,9 +17,22 @@ public class BidService implements IService<Bid> {
         this.bidRepository = bidRepository;
     }
 
+    /**
+     * Add a new bid if newBid is higher than the current highest bid for the same auction
+     * @param newBid The item to be saved.
+     * @return bidID if added or -1
+     */
     @Override
-    public int add(Bid item) {
-        return bidRepository.save(item).getBidId();
+    public int add(Bid newBid) {
+        if(getHighestBidForAnAuction(newBid.getAuctionId()).getBid() < newBid.getBid()) {
+            newBid.setOutbid(true);
+            Bid oldHighestBid = getHighestBidForAnAuction(newBid.getAuctionId());
+            oldHighestBid.setOutbid(false);
+            update(oldHighestBid);
+            return bidRepository.save(newBid).getBidId();
+        } else{
+            return -1;
+        }
     }
 
     @Override
@@ -57,6 +70,22 @@ public class BidService implements IService<Bid> {
      */
     public Bid getHighestBidForAnAuction(int auctionID){
         return bidRepository.getHighestBidForAnAuction(auctionID);
+    }
+
+    /**
+     *
+     *
+     */
+    public boolean addNewBid(Bid newBid){
+
+            if(getHighestBidForAnAuction(newBid.getAuctionId()).getBid() < newBid.getBid()){
+                System.out.println("old highest bid :" +getHighestBidForAnAuction(newBid.getAuctionId()).getBid());
+                System.out.println("new bid : " + newBid.getBid());
+                return true;
+            }
+         else {
+                return false;
+            }
     }
 
 }

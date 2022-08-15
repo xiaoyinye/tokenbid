@@ -1,5 +1,6 @@
 package com.tokenbid.services;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,12 @@ public class UserService implements IService<User> {
 
     @Override
     public int add(User user) {
-        User newUser = userRepository.save(user);
-        String activationLink = "http://localhost:8080/users/" + newUser.getUserId() + "/verify";
-        String message = buildRegistrationEmail(newUser.getFirstName(), newUser.getLastName(), activationLink);
-        emailService.sendHTMLEmail(newUser.getEmail(), "Welcome to TokenBid!", message);
-        return newUser.getUserId();
+
+            User newUser = userRepository.save(user);
+            String activationLink = "http://localhost:8080/users/" + newUser.getUserId() + "/verify";
+            String message = buildRegistrationEmail(newUser.getFirstName(), newUser.getLastName(), activationLink);
+            emailService.sendHTMLEmail(newUser.getEmail(), "Welcome to TokenBid!", message);
+            return newUser.getUserId();
     }
 
     @Override
@@ -84,5 +86,37 @@ public class UserService implements IService<User> {
                     "<p style=\"margin-top: 1.5em;\">Thank you for registering with TokenBid. Please click on the link below to activate your account:</p>" +
                     "<p style=\"margin-top: 1.5em; margin-left: 2em; background-color: #ddd; padding: 0.5em;\"><a href=" + activationLink + ">" + activationLink + "</a></p>" +
                 "</div>";
+    }
+
+
+    /**
+     * Update user with limited attributes passed in as JSON
+     * @param userId
+     * @param userToBeUpdated
+     * @return
+     */
+    public boolean updateUser(int userId, User userToBeUpdated){
+
+        if (userRepository.findById(userId).isPresent() &&
+                userRepository.findById(userId).get().isEmailVerified()) {
+            User user = getById(userId);
+            user.setEmailVerified(true);
+
+           if(userToBeUpdated.getFirstName() != null) {
+               user.setFirstName(userToBeUpdated.getFirstName());
+           }
+
+           if(userToBeUpdated.getLastName() != null){
+               user.setLastName(userToBeUpdated.getLastName());
+           }
+
+           if(userToBeUpdated.getPassword() != null){
+               user.setPassword(userToBeUpdated.getPassword());
+           }
+
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 }
