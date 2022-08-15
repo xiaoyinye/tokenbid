@@ -11,6 +11,7 @@
        
       </div>
 
+
     <body>
      
     
@@ -35,23 +36,11 @@
                                     <div id="form-message-warning" class="mb-4"></div> 
                                         
                                         <button onclick="addAuc();" class="button-19">Add Auction</button>
-                                        
-    
-                                        <div style = "padding: 5%;"> </div>
-                                     
-                                        
-                                        <button onclick="addChild();" class="button-19">Add Item</button>
-                                        
+                                        <div style = "padding: 5%;"> </div>                              
+                                        <button onclick="addChild();" class="button-19">Add Item</button>                                        
+                                        <div style = "padding: 5%;"> </div>                    
+                                        <button onclick="addBid();" class="button-19">Set Bid</button>                                 
 
-
-                                        <div style = "padding: 5%;"> </div>
-                                        
-                                        
-                                        <button onclick="addBid();" class="button-19">Set Bid</button>
-                                    
-                                                
-                                           
-                                       
                             </div>
                         </div>
     
@@ -86,11 +75,12 @@
                                             <p style="color:white; margin: 0;">Starting Bid:</p>
                                             <input name="startingBid" type="number" min="0">
                                             <p style="color:white; margin: 0;">Auction Length:</p>
-                                            <input name="length" type="number">
+                                            <input name="length" type="number" min="0">
                                             <button type="submit">Submit</button>
                                         </form>
 
                                         <form id="bid-form">
+                                            <p class="mb-4" style="text-align: center">Set Bid</p>
                                             <p style="color:white; margin: 0;">item id:</p>
                                             <input name="bid" type="number" min="0" >
                                             <p style="color:white; margin: 0;">bid amount:</p>
