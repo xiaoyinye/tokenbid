@@ -1,33 +1,72 @@
-
+<!DOCTYPE html>
 <html lang="en">
     <head>
-    <link href="assets/style.css" rel="stylesheet" type="text/css"/>
-    <meta charset="utf-8">
+        <link href="assets/style.css" rel="stylesheet" type="text/css"/>
+        <meta charset="utf-8">
+
+        <!-- S3 Bucket requirement -->
+        <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.24.min.js"></script>
+        <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
+
+        <script src="js/app.js" defer></script>
     </head>
     <body>
-     
-    
-      
-    
-    <section class="ftco-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6 text-center mb-5">
-                    <img src="assets/enjoi.png" alt="centered image" height="150" width="275"> 
-                    <h4>Exceptional  Items</h4>
-                </div>
-            </div>
-    
-            <div class="row justify-content-center">
-                <div class="col-lg-10">
-                    <div class="wrapper">
-                        <div class="row no-gutters">
-                             <div class="card shadow-2-strong" style="width:100%; border-radius: 1rem; background-color:#272a34;">
-                    <div class="card-body p-5 text-center"><br>
-                       
+        <section class="ftco-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 text-center mb-5">
+                        <img src="assets/enjoi.png" alt="centered image" height="150" width="275"> 
+                        <h4>Exceptional  Items</h4>
                     </div>
-                  </div>
-    </section>
+                </div>
+        
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="wrapper">
+                            <div class="row no-gutters">
+                                <div class="card shadow-2-strong" style="width:100%; border-radius: 1rem; background-color:#272a34;">
+                                    <div class="card-body p-5 text-center">
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="item-form">
+                    <input name="title" type="text">
+                    <input name="description" type="text">
+                    <select name="category">
+                        <option>Art</option>
+                        <option>Electronics</option>
+                        <option>Clothing</option>
+                    </select>>
+                    <input name="image" type="file">
+                    <button type="submit">Submit</button>
+                </form>
+
+                <form id="user-form">
+                    <input name="firstName" type="text">
+                    <input name="lastName" type="text">
+                    <input name="username" type="text">
+                    <input name="email" type="email">
+                    <input name="password" type="password">
+                    <button type="submit">Submit</button>
+                </form>
+
+                <form id="auction-form">
+                    <input name="itemId" type="number">
+                    <input name="startingBid" type="number">
+                    <input name="length" type="number">
+                    <button type="submit">Submit</button>
+                </form>
+
+                <form id="bid-form">
+                    <input name="bid" type="number">
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </section>
     </body>
-    
-    </html>
+</html>
