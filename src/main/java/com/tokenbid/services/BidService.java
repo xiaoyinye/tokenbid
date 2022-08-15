@@ -71,21 +71,4 @@ public class BidService implements IService<Bid> {
     public Bid getHighestBidForAnAuction(int auctionID){
         return bidRepository.getHighestBidForAnAuction(auctionID);
     }
-
-    /**
-     *
-     *
-     */
-    public boolean addNewBid(Bid newBid){
-
-            if(getHighestBidForAnAuction(newBid.getAuctionId()).getBid() < newBid.getBid()){
-                System.out.println("old highest bid :" +getHighestBidForAnAuction(newBid.getAuctionId()).getBid());
-                System.out.println("new bid : " + newBid.getBid());
-                return true;
-            }
-         else {
-                return false;
-            }
-    }
-
 }
