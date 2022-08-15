@@ -1,3 +1,21 @@
+// S3 bucket configuration
+var bucketName = 'tokenbid';
+var bucketRegion = 'US East (N. Virginia) us-east-1';
+var IdentityPoolId = 'us-east-1:ff5fa4fc-7bd5-427c-ae5a-44f6801508f7';
+
+AWS.config.update({
+    region: bucketRegion,
+    credentials: new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: IdentityPoolId
+    })
+});
+
+var s3 = new AWS.S3({
+    apiVersion: '2006-03-01',
+    params: {Bucket: bucketName}
+});
+
+
 // Utility function to perform a POST request, returns a promise
 async function fetchPOST(path, body) {
     return await fetch(new Request(path, {
@@ -72,7 +90,21 @@ async function addBid(bid) {
 
 // TODO: Add image to S3 bucket
 async function addImage(image) {
-
+    let filePath = 'images/' + image.name;
+    let fileUrl = 'https://' + bucketRegion + '.amazonaws.com/tokenbid/' + filePath;
+    s3.upload({        
+        Key: filePath,
+        Body: file,
+        ACL: 'public-read'
+        }, function(err, data) {
+            if(err) {
+                reject('error');
+            }
+            alert('Successfully Uploaded!');
+        }).on('httpUploadProgress', function (progress) {
+        var uploaded = parseInt((progress.loaded * 100) / progress.total);
+        $("progress").attr('value', uploaded);
+    });
 }
 
 // Update data on database
