@@ -1,5 +1,6 @@
 package com.tokenbid.services;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.omg.SendingContext.RunTime;
@@ -36,7 +37,26 @@ public class UserService implements IService<User> {
     @Override
     public void update(User user) {
         if (userRepository.findById(user.getUserId()).isPresent()) {
-            userRepository.save(user);
+
+            User currentUser = userRepository.findById(user.getUserId()).get();
+            System.out.println(user.getUserId());
+            System.out.println(user.getFirstName());
+            System.out.println(user.getLastName());
+            System.out.println(user.getPassword());
+
+            if (user.getFirstName() != null) {
+                currentUser.setFirstName(user.getFirstName());
+            }
+
+            if (user.getLastName() != null) {
+                currentUser.setLastName(user.getLastName());
+            }
+
+            if (user.getPassword() != null) {
+                currentUser.setPassword(user.getPassword());
+            }
+
+            userRepository.save(currentUser);
         }
     }
 
