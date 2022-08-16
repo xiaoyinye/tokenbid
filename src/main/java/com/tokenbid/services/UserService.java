@@ -2,6 +2,7 @@ package com.tokenbid.services;
 
 import java.util.List;
 
+import org.omg.SendingContext.RunTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,11 @@ public class UserService implements IService<User> {
     }
 
     @Override
-    public int add(User user) {
+    public int add(User user) throws RuntimeException {
+        if (userRepository.existsByUsername(user.getUsername()))
+            throw new IllegalArgumentException("Username is unavailable");
+        if (userRepository.existsByEmail(user.getEmail()))
+            throw new IllegalArgumentException("Email is unavailable");
         User newUser = userRepository.save(user);
         String activationLink = "http://localhost:8080/users/" + newUser.getUserId() + "/verify";
         String message = buildRegistrationEmail(newUser.getFirstName(), newUser.getLastName(), activationLink);

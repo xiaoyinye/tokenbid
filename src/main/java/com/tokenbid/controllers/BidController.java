@@ -30,13 +30,13 @@ public class BidController implements IController<Bid> {
 
     @Override
     @PostMapping(path = "/add", consumes = "application/json")
-    public ResponseEntity<Boolean> add(@RequestBody Bid bid) throws URISyntaxException {
+    public ResponseEntity<String> add(@RequestBody Bid bid) throws URISyntaxException {
         return ResponseEntity.created(new URI("/bids/" + bidService.add(bid))).build();
     }
 
     @Override
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<Boolean> update(@PathVariable("id") int id, @RequestBody Bid updatedBid) {
+    public ResponseEntity<String> update(@PathVariable("id") int id, @RequestBody Bid updatedBid) {
         if (bidService.getById(id) != null) {
             updatedBid.setBidId(id);
             bidService.update(updatedBid);
@@ -48,7 +48,7 @@ public class BidController implements IController<Bid> {
 
     @Override
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") int id) {
+    public ResponseEntity<String> delete(@PathVariable("id") int id) {
         if (bidService.getById(id) != null) {
             bidService.delete(id);
             return ResponseEntity.noContent().build();

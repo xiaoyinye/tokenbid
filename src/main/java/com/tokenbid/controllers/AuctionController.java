@@ -30,13 +30,13 @@ public class AuctionController implements IController<Auction> {
 
     @Override
     @PostMapping(path = "/add", consumes = "application/json")
-    public ResponseEntity<Boolean> add(@RequestBody Auction auction) throws URISyntaxException {
+    public ResponseEntity<String> add(@RequestBody Auction auction) throws URISyntaxException {
         return ResponseEntity.created(new URI("/auctions/" + auctionService.add(auction))).build();
     }
 
     @Override
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<Boolean> update(@PathVariable("id") int id, @RequestBody Auction updatedAuction) {
+    public ResponseEntity<String> update(@PathVariable("id") int id, @RequestBody Auction updatedAuction) {
         if (auctionService.getById(id) != null) {
             updatedAuction.setAuctionId(id);
             auctionService.update(updatedAuction);
@@ -48,7 +48,7 @@ public class AuctionController implements IController<Auction> {
 
     @Override
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") int id) {
+    public ResponseEntity<String> delete(@PathVariable("id") int id) {
         if (auctionService.getById(id) != null) {
             auctionService.delete(id);
             return ResponseEntity.noContent().build();
