@@ -87,4 +87,15 @@ public class UserController implements IController<User> {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PostMapping(path = "/login", consumes = "application/json")
+    public ResponseEntity<User> login(@RequestBody User user) {
+        User foundUser = userService.getByUsername(user.getUsername());
+        if (foundUser != null && foundUser.getPassword().equals(user.getPassword())
+                && foundUser.isEmailVerified()) {
+            return ResponseEntity.ok(foundUser);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
 }
