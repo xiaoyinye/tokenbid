@@ -91,6 +91,14 @@ public class AuctionService implements IService<Auction> {
     }
 
     /**
+     * @return A list of auctions with an end time less than 1 hour from the current time
+     */
+    public List<Auction> getAuctionsEndingInOneHour() {
+        return auctionRepository.findAuctionsEndingInNextHour();
+    }
+
+
+    /**
      * Compose and send emails to the seller and buyer when an auction ends with a sale
      * @param seller User selling the item
      * @param buyer User who won the auction
