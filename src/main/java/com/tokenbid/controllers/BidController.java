@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,12 @@ public class BidController implements IController<Bid> {
     @Override
     @PostMapping(path = "/add", consumes = "application/json")
     public ResponseEntity<String> add(@RequestBody Bid bid) throws URISyntaxException {
-        return ResponseEntity.created(new URI("/bids/" + bidService.add(bid))).build();
+        try {
+            return ResponseEntity.created(new URI("/bids/" + bidService.add(bid))).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+       // return ResponseEntity.created(new URI("/bids/" + bidService.add(bid))).build();
     }
 
     @Override

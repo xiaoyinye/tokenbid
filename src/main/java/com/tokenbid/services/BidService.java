@@ -20,19 +20,18 @@ public class BidService implements IService<Bid> {
     /**
      * Add a new bid if newBid is higher than the current highest bid for the same auction
      * @param newBid The item to be saved.
-     * @return bidID if added or -1
+     * @return id of the newly added bid
+     * @throws IllegalArgumentException if the new bid is lower than the current highest bid
      */
     @Override
-    public int add(Bid newBid) {
-        if(getHighestBidForAnAuction(newBid.getAuctionId()).getBid() < newBid.getBid()) {
-            newBid.setOutbid(true);
-            Bid oldHighestBid = getHighestBidForAnAuction(newBid.getAuctionId());
-            oldHighestBid.setOutbid(false);
-            update(oldHighestBid);
-            return bidRepository.save(newBid).getBidId();
-        } else{
-            return -1;
-        }
+    public int add(Bid newBid) throws IllegalArgumentException {
+        Bid currentHighest = getHighestBidForAnAuction(newBid.getAuctionId());
+        if (newBid.getBid() <= currentHighest.getBid())
+            throw new IllegalArgumentException("Bid must be higher than the current highest bid of " + currentHighest.getBid() + " tokens");
+        newBid.setOutbid(true);
+        currentHighest.setOutbid(false);
+        update(currentHighest);
+        return bidRepository.save(newBid).getBidId();
     }
 
     @Override
