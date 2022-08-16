@@ -2,6 +2,7 @@ package com.tokenbid.services;
 
 import java.util.List;
 
+import org.omg.SendingContext.RunTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,11 @@ public class UserService implements IService<User> {
     }
 
     @Override
-    public int add(User user) {
-
+    public int add(User user) throws IllegalArgumentException {
+        if (userRepository.existsByUsername(user.getUsername()))
+            throw new IllegalArgumentException("Username is unavailable");
+        if (userRepository.existsByEmail(user.getEmail()))
+            throw new IllegalArgumentException("Email is unavailable");
         User newUser = userRepository.save(user);
         String activationLink = "http://localhost:8080/users/" + newUser.getUserId() + "/verify";
         String message = buildRegistrationEmail(newUser.getFirstName(), newUser.getLastName(), activationLink);
@@ -32,25 +36,13 @@ public class UserService implements IService<User> {
     @Override
     public void update(User user) {
         if (userRepository.findById(user.getUserId()).isPresent()) {
-
             User currentUser = userRepository.findById(user.getUserId()).get();
-            System.out.println(user.getUserId());
-            System.out.println(user.getFirstName());
-            System.out.println(user.getLastName());
-            System.out.println(user.getPassword());
-
-            if (user.getFirstName() != null) {
+            if (user.getFirstName() != null)
                 currentUser.setFirstName(user.getFirstName());
-            }
-
-            if (user.getLastName() != null) {
+            if (user.getLastName() != null)
                 currentUser.setLastName(user.getLastName());
-            }
-
-            if (user.getPassword() != null) {
+            if (user.getPassword() != null)
                 currentUser.setPassword(user.getPassword());
-            }
-
             userRepository.save(currentUser);
         }
     }

@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,13 +31,17 @@ public class UserController implements IController<User> {
 
     @Override
     @PostMapping(path = "/add", consumes = "application/json")
-    public ResponseEntity<Boolean> add(@RequestBody User user) throws URISyntaxException {
-        return ResponseEntity.created(new URI("/users/" + userService.add(user))).build();
+    public ResponseEntity<String> add(@RequestBody User user) throws URISyntaxException {
+        try {
+            return ResponseEntity.created(new URI("/users/" + userService.add(user))).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     @Override
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<Boolean> update(@PathVariable("id") int id, @RequestBody User updatedUser) {
+    public ResponseEntity<String> update(@PathVariable("id") int id, @RequestBody User updatedUser) {
         if (userService.getById(id) != null && userService.getById(id).isEmailVerified()) {
             userService.update(updatedUser);
             return ResponseEntity.noContent().build();
@@ -46,7 +51,7 @@ public class UserController implements IController<User> {
 
     @Override
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") int id) {
+    public ResponseEntity<String> delete(@PathVariable("id") int id) {
         if (userService.getById(id) != null) {
             userService.delete(id);
             return ResponseEntity.noContent().build();
