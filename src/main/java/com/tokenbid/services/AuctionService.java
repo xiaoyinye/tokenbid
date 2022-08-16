@@ -44,6 +44,8 @@ public class AuctionService implements IService<Auction> {
                     Bid winningBid = bidService.getHighestBidForAnAuction(auction.getAuctionId());
                     User buyer = userService.getById(winningBid.getUserId());
                     notifySold(seller, buyer, item, winningBid);
+                    item.setUserId(buyer.getUserId());
+                    itemService.update(item);
                     break;
                 case "Not Sold":
                     notifyNotSold(seller, item);
