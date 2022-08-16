@@ -36,15 +36,15 @@
                     <h3 class="mb-4">Choose an action:</h3>
                     <div id="form-message-warning" class="mb-4"></div>
 
-                    <button onclick="addAuc();" class="button-19">
+                    <button onclick="showAuctionForm();" class="button-19">
                       Add Auction
                     </button>
                     <div style="padding: 5%"></div>
-                    <button onclick="addChild();" class="button-19">
+                    <button onclick="showItemForm();" class="button-19">
                       Add Item
                     </button>
                     <div style="padding: 5%"></div>
-                    <button onclick="addBid();" class="button-19">
+                    <button onclick="showBidForm();" class="button-19">
                       Set Bid
                     </button>
                   </div>
@@ -106,7 +106,7 @@
 </html>
 
 <script>
-  function addChild() {
+  function showItemForm() {
     document.getElementById('item-form').style.display = 'block';
     document.getElementById('auction-form').style.display = 'none';
     document.getElementById('bid-form').style.display = 'none';
@@ -114,7 +114,7 @@
 </script>
 
 <script>
-  function addAuc() {
+  function showAuctionForm() {
     document.getElementById('auction-form').style.display = 'block';
     document.getElementById('item-form').style.display = 'none';
     document.getElementById('bid-form').style.display = 'none';
@@ -122,7 +122,7 @@
 </script>
 
 <script>
-  function addBid() {
+  function showBidForm() {
     document.getElementById('auction-form').style.display = 'none';
     document.getElementById('item-form').style.display = 'none';
     document.getElementById('bid-form').style.display = 'block';
