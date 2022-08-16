@@ -1,6 +1,7 @@
 package com.tokenbid.services;
 
 import com.tokenbid.models.Auction;
+import com.tokenbid.models.Bid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -8,42 +9,28 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Component
 public class TimerService {
     private final List<Auction> endingAuctions = new ArrayList<>();
     private final Timer databaseTimer = new Timer("DatabaseTimer");
     private final Timer auctionTimer = new Timer("AuctionTimer");
-    private static final long databaseTimerDelay = 60L * 60L * 1000L;   // 1hr
-    private static final long auctionTimerDelay = 60L * 1000L;          // 1min
+    private static final long databaseTimerDelay = 10L * 1000L;     // 10sec
+    private static final long auctionTimerDelay = 1000L;            // 1sec
 
     @Autowired
     private AuctionService auctionService;
+
+    @Autowired
+    private BidService bidService;
 
     private TimerService() { }
 
     @EventListener(ApplicationReadyEvent.class)
     public void startTimer(ApplicationReadyEvent event) {
-        
         startDatabaseTimer();
         startAuctionTimer();
-        
-//        System.out.println("Application ready, startTimer called");
-//        Timer timer = new Timer("Timer");
-//        timer.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                System.out.println("Attempting to execute run");
-//                Auction auction = auctionService.getEarliestExpiredAuction();
-//                if (auction != null) {
-//                    System.out.println(auction.getAuctionId());
-//                }
-//            }
-//        }, 1000L, 1000L);
     }
 
     /**
@@ -60,7 +47,7 @@ public class TimerService {
                     }
                 }
             }
-        }, databaseTimerDelay);
+        }, 0, databaseTimerDelay);
     }
 
     /**
@@ -70,13 +57,21 @@ public class TimerService {
         auctionTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                for (Auction auction : endingAuctions) {
-                    if (auction.getEndTime().before(Timestamp.from(Instant.now()))) {
-                        // resolve auction
-
+                ListIterator<Auction> itr = endingAuctions.listIterator();
+                while (itr.hasNext()) {
+                    Auction auction = itr.next();
+                    if (auction.getStatus().equalsIgnoreCase("In Progress") && auction.getEndTime().before(Timestamp.from(Instant.now()))) {
+                        int startingBid = auction.getStartingBid();
+                        Bid bid = bidService.getHighestBidForAnAuction(auction.getAuctionId());
+                        if (bid != null && bid.getBid() >= startingBid)
+                            auction.setStatus("Sold");
+                        else
+                            auction.setStatus("Not Sold");
+                        auctionService.update(auction);
+                        itr.remove();
                     }
                 }
             }
-        }, auctionTimerDelay);
+        }, auctionTimerDelay/2, auctionTimerDelay);
     }
 }

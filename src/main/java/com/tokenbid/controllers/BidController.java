@@ -37,7 +37,6 @@ public class BidController implements IController<Bid> {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
-       // return ResponseEntity.created(new URI("/bids/" + bidService.add(bid))).build();
     }
 
     @Override
