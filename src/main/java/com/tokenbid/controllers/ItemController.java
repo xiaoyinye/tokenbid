@@ -30,13 +30,13 @@ public class ItemController implements IController<Item> {
 
     @Override
     @PostMapping(path = "/add", consumes = "application/json")
-    public ResponseEntity<Boolean> add(@RequestBody Item item) throws URISyntaxException {
+    public ResponseEntity<String> add(@RequestBody Item item) throws URISyntaxException {
         return ResponseEntity.created(new URI("/items/" + itemService.add(item))).build();
     }
 
     @Override
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<Boolean> update(@PathVariable("id") int id, @RequestBody Item updatedItem) {
+    public ResponseEntity<String> update(@PathVariable("id") int id, @RequestBody Item updatedItem) {
         if (itemService.getById(id) != null) {
             updatedItem.setItemId(id);
             itemService.update(updatedItem);
@@ -48,7 +48,7 @@ public class ItemController implements IController<Item> {
 
     @Override
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") int id) {
+    public ResponseEntity<String> delete(@PathVariable("id") int id) {
         if (itemService.getById(id) != null) {
             itemService.delete(id);
             return ResponseEntity.noContent().build();

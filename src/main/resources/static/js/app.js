@@ -52,6 +52,36 @@ async function sendRequest(method, path, body) {
   );
 }
 
+// Get data from the database
+async function getUser(userId) {
+  const response = await sendRequest('GET', '/users/' + userId);
+  if (!response.ok) return null;
+  return response.json();
+}
+async function getItem(itemId) {
+  const response = await sendRequest('GET', '/items/' + itemId);
+  if (!response.ok) return null;
+  return response.json();
+}
+async function getAuction(auctionId) {
+  const response = await sendRequest('GET', '/auctions/' + auctionId);
+  if (!response.ok) return null;
+  return response.json();
+}
+async function getBid(bidId) {
+  const response = await sendRequest('GET', '/bids/' + bidId);
+  if (!response.ok) return null;
+  return response.json();
+}
+async function getItemsByCategory(category) {
+    // TODO add endpoint to query by category
+}
+async function getAllItems() {
+  const response = await sendRequest('GET', '/items/all');
+  if (!response.ok) return null;
+  return response.json();
+}
+
 // Add data to database
 async function addUser(user) {
   return await sendRequest('POST', '/users/add', user);
@@ -105,10 +135,12 @@ if (registerForm) {
 
     // Add new user to database
     let response = await addUser(user);
-    console.log(response);
     if (response.ok) {
       console.log('User added!');
       window.location.href = '/login.html';
+    } else if (response.status === 409) {
+      let body = await response.text();
+      alert(body);
     } else {
       console.log('Failed to add user');
     }
@@ -149,7 +181,7 @@ if (itemForm) {
     const data = new FormData(e.target);
 
     let item = {};
-    item.userId = 1; // TODO: get userID from cache
+    item.userId = 1; // TODO: get userID from session
     item.title = data.get('title');
     item.description = data.get('description');
     item.category = data.get('category');
@@ -203,14 +235,17 @@ if (bidForm) {
     // Get the form values
     const data = new FormData(e.target);
     let bid = {};
-    bid.userId = 1; // TODO: get userId from cache
-    bid.auctionId = 7; // TODO: get auctionId from URL
+    bid.userId = 1;                         // TODO: get userId from session
+    bid.auctionId = data.get('auctionId'); // TODO: get auctionId from URL
     bid.bid = data.get('bid');
 
     // Add new bid to database
     let response = await addBid(bid);
     if (response.ok) {
       console.log('Bid added!');
+    } else if (response.status === 409) {
+      let body = await response.text();
+      alert(body);
     } else {
       console.log('Failed to add bid');
     }

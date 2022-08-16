@@ -13,7 +13,7 @@ public interface IController<T> {
      * @return The id of the saved item.
      * @throws URISyntaxException
      */
-    ResponseEntity<Boolean> add(T item) throws URISyntaxException;
+    ResponseEntity<String> add(T item) throws URISyntaxException;
 
     /**
      * Updates an item in the database.
@@ -21,14 +21,14 @@ public interface IController<T> {
      * @param id          The if of item to be updated.
      * @param updatedItem The updated item.
      */
-    ResponseEntity<Boolean> update(int id, T updatedItem);
+    ResponseEntity<String> update(int id, T updatedItem);
 
     /**
      * Deletes an item from the database.
      * 
      * @param item The item to be deleted.
      */
-    ResponseEntity<Boolean> delete(int id);
+    ResponseEntity<String> delete(int id);
 
     /**
      * Gets an item from the database.
