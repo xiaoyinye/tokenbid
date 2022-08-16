@@ -21,6 +21,7 @@ public class UserService implements IService<User> {
 
     @Override
     public int add(User user) {
+
         User newUser = userRepository.save(user);
         String activationLink = "http://localhost:8080/users/" + newUser.getUserId() + "/verify";
         String message = buildRegistrationEmail(newUser.getFirstName(), newUser.getLastName(), activationLink);
@@ -31,7 +32,26 @@ public class UserService implements IService<User> {
     @Override
     public void update(User user) {
         if (userRepository.findById(user.getUserId()).isPresent()) {
-            userRepository.save(user);
+
+            User currentUser = userRepository.findById(user.getUserId()).get();
+            System.out.println(user.getUserId());
+            System.out.println(user.getFirstName());
+            System.out.println(user.getLastName());
+            System.out.println(user.getPassword());
+
+            if (user.getFirstName() != null) {
+                currentUser.setFirstName(user.getFirstName());
+            }
+
+            if (user.getLastName() != null) {
+                currentUser.setLastName(user.getLastName());
+            }
+
+            if (user.getPassword() != null) {
+                currentUser.setPassword(user.getPassword());
+            }
+
+            userRepository.save(currentUser);
         }
     }
 
@@ -75,14 +95,40 @@ public class UserService implements IService<User> {
         return false;
     }
 
+    /**
+     * @param firstName      The user's first name.
+     * @param lastName       The last name of the user.
+     * @param activationLink The link to the user's account activation page.
+     * @return The email message to be sent to the user.
+     */
     private String buildRegistrationEmail(String firstName, String lastName, String activationLink) {
-        return "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em;\">" +
-                    "<p style=\"margin: 0; padding: 0; text-align: center;\">Confirm your email</p>" +
+        return "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em;\">"
+                +
+                "<p style=\"margin: 0; padding: 0; text-align: center;\">Confirm your email</p>" +
                 "</div>" +
                 "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 16px; margin: 0;\">" +
-                    "<p style=\"margin-top: 1.5em;\">Hi " + firstName + " " + lastName + ",</p>" +
-                    "<p style=\"margin-top: 1.5em;\">Thank you for registering with TokenBid. Please click on the link below to activate your account:</p>" +
-                    "<p style=\"margin-top: 1.5em; margin-left: 2em; background-color: #ddd; padding: 0.5em;\"><a href=" + activationLink + ">" + activationLink + "</a></p>" +
+                "<p style=\"margin-top: 1.5em;\">Hi " + firstName + " " + lastName + ",</p>" +
+                "<p style=\"margin-top: 1.5em;\">Thank you for registering with TokenBid. Please click on the link below to activate your account:</p>"
+                +
+                "<p style=\"margin-top: 1.5em; margin-left: 2em; background-color: #ddd; padding: 0.5em;\"><a href="
+                + activationLink + ">" + activationLink + "</a></p>" +
                 "</div>";
+    }
+
+    /**
+     * Checks if the username exists in the database. If it does, it returns the
+     * user.
+     * 
+     * @param username The username to check.
+     * @return The user if it exists, null otherwise.
+     */
+    public User getByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+
+        if (user != null) {
+            return user;
+        }
+
+        return null;
     }
 }

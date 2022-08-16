@@ -37,13 +37,10 @@ public class UserController implements IController<User> {
     @Override
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<Boolean> update(@PathVariable("id") int id, @RequestBody User updatedUser) {
-        if (userService.getById(id) != null &&
-                userService.getById(id).isEmailVerified()) {
-            updatedUser.setUserId(id);
+        if (userService.getById(id) != null && userService.getById(id).isEmailVerified()) {
             userService.update(updatedUser);
             return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.notFound().build();
     }
 
@@ -87,6 +84,16 @@ public class UserController implements IController<User> {
                 userService.verifyUserAndAddFreeTokens(userId)) {
             String message = "Your email has been verified. Enjoy 250 free tokens :)";
             return ResponseEntity.ok(message);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping(path = "/login", consumes = "application/json")
+    public ResponseEntity<User> login(@RequestBody User user) {
+        User foundUser = userService.getByUsername(user.getUsername());
+        if (foundUser != null && foundUser.getPassword().equals(user.getPassword())
+                && foundUser.isEmailVerified()) {
+            return ResponseEntity.ok(foundUser);
         }
 
         return ResponseEntity.notFound().build();

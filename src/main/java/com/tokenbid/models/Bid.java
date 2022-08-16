@@ -35,4 +35,5 @@ public class Bid {
     @JsonProperty("isOutbid")
     private boolean isOutbid = false;
 
+
 }
