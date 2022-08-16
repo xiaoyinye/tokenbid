@@ -1,5 +1,7 @@
 package com.tokenbid.services;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 import com.tokenbid.models.Bid;
@@ -76,6 +78,16 @@ public class AuctionService implements IService<Auction> {
     @Override
     public List<Auction> getAll() {
         return auctionRepository.findAll();
+    }
+
+    /**
+     * @return Auction with the earliest end time in the past or null if no auction has ended
+     */
+    public Auction getEarliestExpiredAuction() {
+        Auction earliestEndAuction = auctionRepository.findByEarliestEndTime();
+        if (earliestEndAuction.getEndTime().before(Timestamp.from(Instant.now())))
+            return earliestEndAuction;
+        return null;
     }
 
     /**
