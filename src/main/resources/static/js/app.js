@@ -39,7 +39,7 @@
 
 // }
 
-// Utility function to perform an HTTPRequest, returns a promsie
+// Utility function to perform an HTTPRequest, returns a promise with an HTTPResponse
 async function sendRequest(method, path, body) {
     return await fetch(new Request(path, {
         method: method,
@@ -66,16 +66,17 @@ async function addBid(bid) {
 
 // Update data on database
 async function updateUser(user) {
-    return await sendRequest('PUT', '/users/' + user.Id, user);
+    console.log(user);
+    return await sendRequest('PUT', '/users/' + user.userId, user);
 }
 async function updateItem(item) {
-    return await sendRequest('PUT', '/items/' + item.Id, item);
+    return await sendRequest('PUT', '/items/' + item.itemId, item);
 }
 async function updateAuction(auction) {
-    return await sendRequest('PUT', '/auctions/' + auction.Id, auction);
+    return await sendRequest('PUT', '/auctions/' + auction.auctionId, auction);
 }
 async function updateBid(bid) {
-    return await sendRequest('PUT', '/bids/' + bid.Id, bid);
+    return await sendRequest('PUT', '/bids/' + bid.bidId, bid);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -98,7 +99,7 @@ if (userForm) {
         user.tokens = 0;
 
         // Add new user to database
-        let response = await addUser(user);
+        let response = await updateUser(user);
         console.log(response);
         if (response.ok) {
             console.log("User added!");

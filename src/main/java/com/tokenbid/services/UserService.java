@@ -33,7 +33,26 @@ public class UserService implements IService<User> {
     @Override
     public void update(User user) {
         if (userRepository.findById(user.getUserId()).isPresent()) {
-            userRepository.save(user);
+
+            User currentUser = userRepository.findById(user.getUserId()).get();
+            System.out.println(user.getUserId());
+            System.out.println(user.getFirstName());
+            System.out.println(user.getLastName());
+            System.out.println(user.getPassword());
+
+            if (user.getFirstName() != null) {
+                currentUser.setFirstName(user.getFirstName());
+            }
+
+            if (user.getLastName() != null) {
+                currentUser.setLastName(user.getLastName());
+            }
+
+            if (user.getPassword() != null) {
+                currentUser.setPassword(user.getPassword());
+            }
+
+            userRepository.save(currentUser);
         }
     }
 
@@ -86,37 +105,5 @@ public class UserService implements IService<User> {
                     "<p style=\"margin-top: 1.5em;\">Thank you for registering with TokenBid. Please click on the link below to activate your account:</p>" +
                     "<p style=\"margin-top: 1.5em; margin-left: 2em; background-color: #ddd; padding: 0.5em;\"><a href=" + activationLink + ">" + activationLink + "</a></p>" +
                 "</div>";
-    }
-
-
-    /**
-     * Update user with limited attributes passed in as JSON
-     * @param userId
-     * @param userToBeUpdated
-     * @return
-     */
-    public boolean updateUser(int userId, User userToBeUpdated){
-
-        if (userRepository.findById(userId).isPresent() &&
-                userRepository.findById(userId).get().isEmailVerified()) {
-            User user = getById(userId);
-            user.setEmailVerified(true);
-
-           if(userToBeUpdated.getFirstName() != null) {
-               user.setFirstName(userToBeUpdated.getFirstName());
-           }
-
-           if(userToBeUpdated.getLastName() != null){
-               user.setLastName(userToBeUpdated.getLastName());
-           }
-
-           if(userToBeUpdated.getPassword() != null){
-               user.setPassword(userToBeUpdated.getPassword());
-           }
-
-            userRepository.save(user);
-            return true;
-        }
-        return false;
     }
 }
