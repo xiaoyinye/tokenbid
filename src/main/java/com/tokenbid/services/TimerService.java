@@ -31,7 +31,7 @@ public class TimerService {
         
         startDatabaseTimer();
         startAuctionTimer();
-
+        
 //        System.out.println("Application ready, startTimer called");
 //        Timer timer = new Timer("Timer");
 //        timer.scheduleAtFixedRate(new TimerTask() {
