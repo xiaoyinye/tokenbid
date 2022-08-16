@@ -52,6 +52,36 @@ async function sendRequest(method, path, body) {
   );
 }
 
+// Get data from the database
+async function getUser(userId) {
+  const response = await sendRequest('GET', '/users/' + userId);
+  if (!response.ok) return null;
+  return response.json();
+}
+async function getItem(itemId) {
+  const response = await sendRequest('GET', '/items/' + itemId);
+  if (!response.ok) return null;
+  return response.json();
+}
+async function getAuction(auctionId) {
+  const response = await sendRequest('GET', '/auctions/' + auctionId);
+  if (!response.ok) return null;
+  return response.json();
+}
+async function getBid(bidId) {
+  const response = await sendRequest('GET', '/bids/' + bidId);
+  if (!response.ok) return null;
+  return response.json();
+}
+async function getItemsByCategory(category) {
+    // TODO add endpoint to query by category
+}
+async function getAllItems() {
+  const response = await sendRequest('GET', '/items/all');
+  if (!response.ok) return null;
+  return response.json();
+}
+
 // Add data to database
 async function addUser(user) {
   return await sendRequest('POST', '/users/add', user);
