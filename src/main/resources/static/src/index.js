@@ -12,6 +12,7 @@ const getBid = fetchRequests.getBid;
 const getItemsByCategory = fetchRequests.getItemsByCategory;
 const getAllItems = fetchRequests.getAllItems;
 const getAllActiveAuctions = fetchRequests.getAllActiveAuctions;
+const getHighestBid = fetchRequests.getHighestBid;
 const updateUser = fetchRequests.updateUser;
 const updateItem = fetchRequests.updateItem;
 const updateAuction = fetchRequests.updateAuction;
@@ -160,11 +161,16 @@ if (bidForm) {
   bidForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
+    // Array of url query parameters
+    const urlParams = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
+
     // Get the form values
     const data = new FormData(e.target);
     let bid = {};
     bid.userId = 1; // TODO: get userId from session
-    bid.auctionId = data.get('auctionId'); // TODO: get auctionId from URL
+    bid.auctionId = urlParams.auctionId;
     bid.bid = data.get('bid');
 
     // Add new bid to database
@@ -180,52 +186,102 @@ if (bidForm) {
   });
 }
 
+async function populateItemsContainer(itemsContainer) {
+      // Get current ongoing auctions
+      let auctions = await getAllActiveAuctions();
+      let items = [];
+  
+      // Get information for each item in an ongoing auction
+      for (let i = 0; i < auctions.length; i++) {
+        let item = await getItem(auctions[i].itemId);
+        if (item) {
+          item.auctionId = auctions[i].auctionId;
+          items.push(item);
+        }
+      }
+  
+      // Add each item to the items container
+      itemsContainer.textContent = "";  // remove all children
+      for (let i = 0; i < items.length; i++) {
+        let item = items[i];
+        let card = this.document.createElement('div');
+        card.classList.add('gallery');
+  
+        let imgEle = this.document.createElement('img');
+        // TODO add item's image
+        card.appendChild(imgEle);
+        
+        let titleEle = this.document.createElement('p');
+        titleEle.textContent = item.title;
+        card.appendChild(titleEle);
+  
+        let descEle = this.document.createElement('p');
+        descEle.textContent = item.description;
+        card.appendChild(descEle);
+  
+        let categoryEle = this.document.createElement('p');
+        categoryEle.textContent = 'Category: ' + item.category;
+        card.appendChild(categoryEle);
+  
+        let viewEle = this.document.createElement('button');
+        viewEle.textContent = 'View';
+        viewEle.addEventListener('click', () => {
+          this.window.location.href = '/auction.html?auctionId=' + item.auctionId;
+        });
+        card.appendChild(viewEle);
+        itemsContainer.appendChild(card);
+      }
+  
+      console.log(auctions);
+      console.log(items);
+}
+
+async function displayAuctionDetails(auctionId, detailContainer) {
+  detailContainer.textContent = ""; // remove all children
+
+  const auction = await getAuction(auctionId);
+  if (!auction) return;
+  const item = await getItem(auction.itemId);
+  if (!item) return;
+  const highestBid = await getHighestBid(auctionId);
+  console.log(highestBid);
+
+  let imgEle = document.createElement('img');
+  // TODO add item's image
+  detailContainer.appendChild(imgEle);
+
+  let titleEle = document.createElement('div');
+  titleEle.classList.add('desc');
+  titleEle.textContent = item.title;
+  detailContainer.appendChild(titleEle);
+
+  let descEle = document.createElement('div');
+  descEle.classList.add('desc');
+  descEle.textContent = item.description;
+  detailContainer.appendChild(descEle);
+
+  let currentBidEle = document.createElement('div');
+  currentBidEle.classList.add('desc');
+  let bid = highestBid ? highestBid.bid : auction.startingBid;
+  currentBidEle.textContent = 'Current Bid: ' + bid + ' tokens';
+  detailContainer.appendChild(currentBidEle);
+}
+
 window.addEventListener('DOMContentLoaded', async function(e) {
+  // Array of url query parameters
+  const urlParams = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
+  // On explore.html display current items for auction
   const itemsContainer = this.document.getElementById('items-container');
-  if (itemsContainer) {
-    // Get current ongoing auctions
-    let auctions = await getAllActiveAuctions();
-    let items = [];
+  if (itemsContainer) populateItemsContainer(itemsContainer);
 
-    // Get information for each item in an ongoing auction
-    for (let i = 0; i < auctions.length; i++) {
-      let item = await getItem(auctions[i].itemId);
-      if (item) items.push(item);
-    }
+  // On auction.html display auction details
+  const detailContainer = this.document.getElementById('item-detail-container');
+  if (detailContainer) displayAuctionDetails(urlParams.auctionId, detailContainer);
 
-    // Add each item to the items container
-    itemsContainer.textContent = "";  // remove all children
-    for (let i = 0; i < items.length; i++) {
-      let item = items[i];
-      let card = this.document.createElement('div');
-      card.classList.add('gallery');
 
-      let imgEle = this.document.createElement('img');
-      // TODO add item's image
-      card.appendChild(imgEle);
-      
-      let titleEle = this.document.createElement('p');
-      titleEle.textContent = item.title;
-      card.appendChild(titleEle);
+  
 
-      let descEle = this.document.createElement('p');
-      descEle.textContent = item.description;
-      card.appendChild(descEle);
-
-      let categoryEle = this.document.createElement('p');
-      categoryEle.textContent = 'Category: ' + item.category;
-      card.appendChild(categoryEle);
-
-      let viewEle = this.document.createElement('button');
-      viewEle.textContent = 'View';
-      viewEle.addEventListener('click', () => {
-        this.window.location.href = '/auction.html?itemId=' + item.itemId;
-      });
-      card.appendChild(viewEle);
-      itemsContainer.appendChild(card);
-    }
-
-    console.log(auctions);
-    console.log(items);
-  }
 });
