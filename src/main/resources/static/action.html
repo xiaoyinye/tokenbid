@@ -85,7 +85,13 @@
                         <option>Clothing</option>
                       </select>
                       <p style="color: white; margin: 0">Image</p>
-                      <input name="image" type="file" style="color: white" />
+                      <input
+                        id="image"
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        style="color: white"
+                      />
                       <button type="submit">Submit</button>
                     </form>
                   </div>
@@ -103,7 +109,6 @@
   function showItemForm() {
     document.getElementById('item-form').style.display = 'block';
     document.getElementById('auction-form').style.display = 'none';
-    document.getElementById('bid-form').style.display = 'none';
   }
 </script>
 
@@ -111,6 +116,5 @@
   function showAuctionForm() {
     document.getElementById('auction-form').style.display = 'block';
     document.getElementById('item-form').style.display = 'none';
-    document.getElementById('bid-form').style.display = 'none';
   }
 </script>

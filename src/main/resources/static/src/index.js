@@ -1,4 +1,5 @@
 const fetchRequests = require('./fetchRequests');
+const s3 = require('./s3');
 const addUser = fetchRequests.addUser;
 const loginUser = fetchRequests.loginUser;
 const addItem = fetchRequests.addItem;
@@ -77,6 +78,7 @@ const itemForm = document.getElementById('item-form');
 if (itemForm) {
   itemForm.addEventListener('submit', async function (e) {
     e.preventDefault();
+    const image = document.getElementById('image').files[0];
 
     // Get the form values
     const data = new FormData(e.target);
@@ -87,16 +89,28 @@ if (itemForm) {
     item.description = data.get('description');
     item.category = data.get('category');
 
-    // Add new item to database and image to S3 bucket
+    // Create a random image name
+    const randomImageName =
+      'image-' + Math.floor(Math.random() * 1000000) + '.png';
+
+    // Get secured url to upload image to S3
+    const url = await s3.generateUploadUrl(randomImageName);
+
+    // Add image to S3 and item to database
+    let uploadImageResponse = await s3.uploadImage(url, image);
+
+    if (uploadImageResponse.ok) {
+      item.imageUrl = url.split('?')[0];
+    } else {
+      console.log('Failed to upload image');
+    }
+
     let response = await addItem(item);
     if (response.ok) {
       console.log('Item added!');
     } else {
       console.log('Failed to add item');
     }
-
-    //let image = data.get('image');
-    //await addImage(image);
   });
 }
 
