@@ -133,6 +133,8 @@ if (itemForm) {
       window.location.href = '/explore.html';
     } else {
       console.log('Failed to add item');
+      item.imageUrl =
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png';
     }
   });
 }
@@ -177,7 +179,7 @@ if (bidForm) {
 
     // Array of url query parameters
     const urlParams = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop)
+      get: (searchParams, prop) => searchParams.get(prop),
     });
 
     // Get the form values
@@ -290,13 +292,12 @@ async function displayAuctionDetails(auctionId, detailContainer) {
 window.addEventListener('DOMContentLoaded', async function (e) {
   // Array of url query parameters
   const urlParams = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop)
+    get: (searchParams, prop) => searchParams.get(prop),
   });
 
   // On explore.html display current items for auction
   const auctionsContainer = this.document.getElementById('auctions-container');
-  if (auctionsContainer)
-    populateAuctionsContainer(auctionsContainer);
+  if (auctionsContainer) populateAuctionsContainer(auctionsContainer);
 
   // On auction.html display auction details
   const detailContainer = this.document.getElementById('item-detail-container');
