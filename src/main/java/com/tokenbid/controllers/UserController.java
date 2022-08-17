@@ -2,6 +2,7 @@ package com.tokenbid.controllers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.InputMismatchException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,5 +103,25 @@ public class UserController implements IController<User> {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    /**
+     * To get URL to add tokens
+     * @param userId userId who buys tokens
+     * @param tokens number of tokens to be added
+     * @return
+     */
+    @PutMapping(path = "/{id}/add-token/{add-tokens}")
+    public ResponseEntity<String> addTokens(@PathVariable("id") int userId, @PathVariable("add-tokens") int tokens) {
+
+        if (userService.getById(userId) != null) {
+            if (userService.addTokenAsPaypalAmount(tokens, userId)) {
+                return ResponseEntity.ok("Tokens added to the user with user ID: " + userId);
+            }
+            return ResponseEntity.ok("Tokens can not be added to the user with user ID:" + userId);
+        }
+        else {
+            return ResponseEntity.ok("User with user ID: " + userId+ " does not exist");
+        }
     }
 }
