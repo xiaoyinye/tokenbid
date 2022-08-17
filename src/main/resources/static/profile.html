@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>TokenBid - Item</title>
+    <title>TokenBid - Profile</title>
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <script src="./dist/app.js" defer></script>
   </head>
@@ -23,7 +23,7 @@
               height="150"
               width="275"
             />
-            <h4>Auction</h4>
+            <h4>Profile</h4>
           </div>
         </div>
 
@@ -33,21 +33,18 @@
               <div class="row no-gutters">
                 <div class="col-md-6 d-flex align-items-stretch">
                   <div class="contact-wrap w-100 p-md-5 p-4 py-5">
-                    <h3 class="mb-4">Auction Id X:</h3>
+                    <h3 class="mb-4">Your Current Info:</h3>
                     <div id="form-message-warning" class="mb-4"></div>
 
-                    <form id="bid-form" class="mb-4">
-                      <p style="color: white; margin: 0">Item ID:</p>
-                      <input name="id" type="number" min="0" />
-                      <p style="color: white; margin: 0">Bid Amount:</p>
-                      <input name="bidAmount" type="number" min="0" />
-                      <button type="submit">Submit</button>
-                    </form>
+                    <p style="color: white">First Name</p>
+                    <p style="color: white">Last Name</p>
+                    <p style="color: white">Email</p>
+                    <p style="color: white">Username</p>
 
-                    <button onclick="showBidForm();" class="button-19">
-                      Set Bid
-                    </button>
                     <div style="padding: 5%"></div>
+                    <button onclick="showProfileForm();" class="button-19">
+                      Update Info
+                    </button>
                   </div>
                 </div>
 
@@ -55,17 +52,18 @@
                   <div class="info-wrap w-100 p-md-5 p-4 py-5 img">
                     <h3 style="text-align: center">Welcome to Token Bid</h3>
 
-                    <div class="gallery" style="margin-left: 25%">
-                      <img
-                        src="assets/lotus.png"
-                        alt="Forest"
-                        width="400"
-                        height="400"
-                      />
-
-                      <div class="desc">Very Rare Lotus</div>
-                      <div class="desc">Current Bid: $5,000,000</div>
-                    </div>
+                    <form id="profile-form">
+                      <p class="mb-4" style="text-align: center">Update Info</p>
+                      <p style="color: white; margin: 0">First Name:</p>
+                      <input name="firstName" type="text" />
+                      <p style="color: white; margin: 0">Last Name:</p>
+                      <input name="lastName" type="text" />
+                      <p style="color: white; margin: 0">Password:</p>
+                      <input name="password" type="password" />
+                      <p style="color: white; margin: 0">Re-enter Password:</p>
+                      <input name="confirmPassword" type="password" />
+                      <button type="submit">Update</button>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -78,7 +76,7 @@
 </html>
 
 <script>
-  function showBidForm() {
-    document.getElementById('bid-form').style.display = 'block';
+  function showProfileForm() {
+    document.getElementById('profile-form').style.display = 'block';
   }
 </script>

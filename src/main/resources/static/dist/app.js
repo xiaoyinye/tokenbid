@@ -1,1 +1,302 @@
-(()=>{var t={925:t=>{async function e(t,e,n){return await fetch(new Request(e,{method:t,headers:{"Content-Type":"application/json"},body:JSON.stringify(n)}))}t.exports={addUser:async function(t){return await e("POST","/users/add",t)},loginUser:async function(t){return await e("POST","/users/login",t)},addItem:async function(t){return await e("POST","/items/add",t)},addAuction:async function(t){return await e("POST","/auctions/add",t)},addBid:async function(t){return await e("POST","/bids/add",t)},getUser:async function(t){const n=await e("GET","/users/"+t);return n.ok?n.json():null},getItem:async function(t){const n=await e("GET","/items/"+t);return n.ok?n.json():null},getAuction:async function(t){const n=await e("GET","/auctions/"+t);return n.ok?n.json():null},getBid:async function(t){const n=await e("GET","/bids/"+t);return n.ok?n.json():null},getItemsByCategory:async function(t){},getAllItems:async function(){const t=await e("GET","/items/all");return t.ok?t.json():null},updateUser:async function(t){return console.log(t),await e("PUT","/users/"+t.userId,t)},updateItem:async function(t){return await e("PUT","/items/"+t.itemId,t)},updateAuction:async function(t){return await e("PUT","/auctions/"+t.auctionId,t)},updateBid:async function(t){return await e("PUT","/bids/"+t.bidId,t)}}}},e={};function n(a){var o=e[a];if(void 0!==o)return o.exports;var s=e[a]={exports:{}};return t[a](s,s.exports,n),s.exports}(()=>{const t=n(925),e=t.addUser,a=t.loginUser,o=t.addItem,s=t.addAuction,i=t.addBid,d=(t.getUser,t.getItem,t.getAuction,t.getBid,t.getItemsByCategory,t.getAllItems,t.updateUser,t.updateItem,t.updateAuction,t.updateBid,document.getElementById("register-form"));d&&d.addEventListener("submit",(async function(t){t.preventDefault();const n=new FormData(t.target);let a={};a.firstName=n.get("firstName"),a.lastName=n.get("lastName"),a.username=n.get("username"),a.email=n.get("email"),a.password=n.get("password"),a.tokens=0;let o=await e(a);if(o.ok)console.log("User added!"),window.location.href="/login.html";else if(409===o.status){let t=await o.text();alert(t)}else console.log("Failed to add user")}));const r=document.getElementById("login-form");r&&r.addEventListener("submit",(async function(t){t.preventDefault();const e=new FormData(t.target);let n={};n.username=e.get("username"),n.password=e.get("password"),console.log(n);let o=await a(n);console.log(o),o.ok?(console.log("User logged in!"),window.location.href="/explore.html"):console.log("Failed to log in user")}));const c=document.getElementById("item-form");c&&c.addEventListener("submit",(async function(t){t.preventDefault();const e=new FormData(t.target);let n={userId:1};n.title=e.get("title"),n.description=e.get("description"),n.category=e.get("category"),(await o(n)).ok?console.log("Item added!"):console.log("Failed to add item")}));const u=document.getElementById("auction-form");u&&u.addEventListener("submit",(async function(t){t.preventDefault();const e=new FormData(t.target);let n=Number(e.get("length")),a=(new Date).getTime(),o=a+36e5*n,i={};i.itemId=e.get("itemId"),i.startingBid=e.get("startingBid"),i.startTime=new Date(a).toJSON(),i.endTime=new Date(o).toJSON(),(await s(i)).ok?console.log("Auction added!"):console.log("Failed to add auction")}));const l=document.getElementById("bid-form");l&&l.addEventListener("submit",(async function(t){t.preventDefault();const e=new FormData(t.target);let n={userId:1};n.auctionId=e.get("auctionId"),n.bid=e.get("bid");let a=await i(n);if(a.ok)console.log("Bid added!");else if(409===a.status){let t=await a.text();alert(t)}else console.log("Failed to add bid")}))})()})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
+/* 1 */
+/***/ ((module) => {
+
+// Utility function to perform an HTTPRequest, returns a promise with an HTTPResponse
+async function sendRequest(method, path, body) {
+  return await fetch(
+    new Request(path, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+  );
+}
+
+// Add data to database
+async function addUser(user) {
+  return await sendRequest('POST', '/users/add', user);
+}
+
+async function loginUser(user) {
+  return await sendRequest('POST', '/users/login', user);
+}
+
+async function addItem(item) {
+  return await sendRequest('POST', '/items/add', item);
+}
+
+async function addAuction(auction) {
+  return await sendRequest('POST', '/auctions/add', auction);
+}
+
+async function addBid(bid) {
+  return await sendRequest('POST', '/bids/add', bid);
+}
+
+// Get data from the database
+async function getUser(userId) {
+  const response = await sendRequest('GET', '/users/' + userId);
+  if (!response.ok) return null;
+  return response.json();
+}
+
+async function getItem(itemId) {
+  const response = await sendRequest('GET', '/items/' + itemId);
+  if (!response.ok) return null;
+  return response.json();
+}
+
+async function getAuction(auctionId) {
+  const response = await sendRequest('GET', '/auctions/' + auctionId);
+  if (!response.ok) return null;
+  return response.json();
+}
+
+async function getBid(bidId) {
+  const response = await sendRequest('GET', '/bids/' + bidId);
+  if (!response.ok) return null;
+  return response.json();
+}
+
+async function getItemsByCategory(category) {
+  // TODO add endpoint to query by category
+}
+
+async function getAllItems() {
+  const response = await sendRequest('GET', '/items/all');
+  if (!response.ok) return null;
+  return response.json();
+}
+
+// Update data on database
+async function updateUser(user) {
+  console.log(user);
+  return await sendRequest('PUT', '/users/' + user.userId, user);
+}
+
+async function updateItem(item) {
+  return await sendRequest('PUT', '/items/' + item.itemId, item);
+}
+
+async function updateAuction(auction) {
+  return await sendRequest('PUT', '/auctions/' + auction.auctionId, auction);
+}
+
+async function updateBid(bid) {
+  return await sendRequest('PUT', '/bids/' + bid.bidId, bid);
+}
+
+module.exports = {
+  addUser,
+  loginUser,
+  addItem,
+  addAuction,
+  addBid,
+  getUser,
+  getItem,
+  getAuction,
+  getBid,
+  getItemsByCategory,
+  getAllItems,
+  updateUser,
+  updateItem,
+  updateAuction,
+  updateBid,
+};
+
+
+/***/ })
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+const fetchRequests = __webpack_require__(1);
+const addUser = fetchRequests.addUser;
+const loginUser = fetchRequests.loginUser;
+const addItem = fetchRequests.addItem;
+const addAuction = fetchRequests.addAuction;
+const addBid = fetchRequests.addBid;
+const getUser = fetchRequests.getUser;
+const getItem = fetchRequests.getItem;
+const getAuction = fetchRequests.getAuction;
+const getBid = fetchRequests.getBid;
+const getItemsByCategory = fetchRequests.getItemsByCategory;
+const getAllItems = fetchRequests.getAllItems;
+const updateUser = fetchRequests.updateUser;
+const updateItem = fetchRequests.updateItem;
+const updateAuction = fetchRequests.updateAuction;
+const updateBid = fetchRequests.updateBid;
+
+/////////////////////////////////////////////////////////////////////////////
+// Event listeners, TODO change names when forms are added, add input validation
+/////////////////////////////////////////////////////////////////////////////
+
+const registerForm = document.getElementById('register-form');
+if (registerForm) {
+  registerForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // Get the form values
+    const data = new FormData(e.target);
+    let user = {};
+    user.firstName = data.get('firstName');
+    user.lastName = data.get('lastName');
+    user.username = data.get('username');
+    user.email = data.get('email');
+    user.password = data.get('password');
+    user.tokens = 0;
+
+    // Add new user to database
+    let response = await addUser(user);
+    if (response.ok) {
+      console.log('User added!');
+      window.location.href = '/login.html';
+    } else if (response.status === 409) {
+      let body = await response.text();
+      alert(body);
+    } else {
+      console.log('Failed to add user');
+    }
+  });
+}
+
+const loginForm = document.getElementById('login-form');
+if (loginForm) {
+  loginForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // Get the form values
+    const data = new FormData(e.target);
+    let user = {};
+    user.username = data.get('username');
+    user.password = data.get('password');
+    console.log(user);
+
+    // Add new user to database
+    let response = await loginUser(user);
+    console.log(response);
+
+    if (response.ok) {
+      console.log('User logged in!');
+      window.location.href = '/explore.html';
+    } else {
+      console.log('Failed to log in user');
+    }
+  });
+}
+
+const itemForm = document.getElementById('item-form');
+if (itemForm) {
+  itemForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // Get the form values
+    const data = new FormData(e.target);
+
+    let item = {};
+    item.userId = 1; // TODO: get userID from session
+    item.title = data.get('title');
+    item.description = data.get('description');
+    item.category = data.get('category');
+
+    // Add new item to database and image to S3 bucket
+    let response = await addItem(item);
+    if (response.ok) {
+      console.log('Item added!');
+    } else {
+      console.log('Failed to add item');
+    }
+
+    //let image = data.get('image');
+    //await addImage(image);
+  });
+}
+
+const auctionForm = document.getElementById('auction-form');
+if (auctionForm) {
+  auctionForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // Get the form values
+    const data = new FormData(e.target);
+    let hours = Number(data.get('length')); // auction length in hours
+    let start = new Date().getTime();
+    let end = start + 1000 * 60 * 60 * hours;
+    let auction = {};
+    auction.itemId = data.get('itemId');
+    auction.startingBid = data.get('startingBid');
+    auction.startTime = new Date(start).toJSON();
+    auction.endTime = new Date(end).toJSON();
+
+    // Add new auction to database
+    let response = await addAuction(auction);
+    if (response.ok) {
+      console.log('Auction added!');
+
+      // TODO: Start a timer if auction was successfully added
+    } else {
+      console.log('Failed to add auction');
+    }
+  });
+}
+
+const bidForm = document.getElementById('bid-form');
+if (bidForm) {
+  bidForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // Get the form values
+    const data = new FormData(e.target);
+    let bid = {};
+    bid.userId = 1; // TODO: get userId from session
+    bid.auctionId = data.get('auctionId'); // TODO: get auctionId from URL
+    bid.bid = data.get('bid');
+
+    // Add new bid to database
+    let response = await addBid(bid);
+    if (response.ok) {
+      console.log('Bid added!');
+    } else if (response.status === 409) {
+      let body = await response.text();
+      alert(body);
+    } else {
+      console.log('Failed to add bid');
+    }
+  });
+}
+
+})();
+
+/******/ })()
+;
