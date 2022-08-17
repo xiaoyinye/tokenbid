@@ -1,5 +1,7 @@
 package com.tokenbid.services;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 import com.tokenbid.models.Bid;
@@ -39,13 +41,13 @@ public class AuctionService implements IService<Auction> {
             auctionRepository.save(auction);
             Item item = itemService.getById(auction.getItemId());
             User seller = userService.getById(item.getUserId());
+            System.out.println("Auction status: " + auction.getStatus());
             switch (auction.getStatus()) {
                 case "Sold":
                     Bid winningBid = bidService.getHighestBidForAnAuction(auction.getAuctionId());
                     User buyer = userService.getById(winningBid.getUserId());
                     notifySold(seller, buyer, item, winningBid);
-                    item.setUserId(buyer.getUserId());
-                    itemService.update(item);
+                    processSale(item, winningBid, buyer, seller);
                     break;
                 case "Not Sold":
                     notifyNotSold(seller, item);
@@ -55,6 +57,26 @@ public class AuctionService implements IService<Auction> {
                     break;
             }
         }
+    }
+
+    /**
+     * Transfer item ownership from seller to buyer, add tokens from winning bid to the seller (tokens have already been subtracted from buyer)
+     * Delete all bids belonging to this auction
+     * @param item Item being sold
+     * @param bid Winning bid
+     * @param buyer User buying the item
+     * @param seller User selling the item
+     */
+    private void processSale(Item item, Bid bid, User buyer, User seller) {
+        // transfer item ownership
+        item.setUserId(buyer.getUserId());
+        itemService.update(item);
+
+        // process token transfer
+        seller.setTokens(seller.getTokens() + bid.getBid());
+
+        // delete all bids for this auction
+        bidService.deleteForAuction(bid.getAuctionId());
     }
 
     @Override
@@ -69,7 +91,6 @@ public class AuctionService implements IService<Auction> {
         if (auctionRepository.findById(auctionId).isPresent()) {
             return auctionRepository.findById(auctionId).get();
         }
-
         return null;
     }
 
@@ -77,6 +98,24 @@ public class AuctionService implements IService<Auction> {
     public List<Auction> getAll() {
         return auctionRepository.findAll();
     }
+
+    /**
+     * @return Auction with the earliest end time in the past or null if no auction has ended
+     */
+    public Auction getEarliestExpiredAuction() {
+        Auction earliestEndAuction = auctionRepository.findByEarliestEndTime();
+        if (earliestEndAuction.getEndTime().before(Timestamp.from(Instant.now())))
+            return earliestEndAuction;
+        return null;
+    }
+
+    /**
+     * @return A list of auctions with an end time less than 1 hour from the current time
+     */
+    public List<Auction> getAuctionsEndingInOneHour() {
+        return auctionRepository.findAuctionsEndingInNextHour();
+    }
+
 
     /**
      * Compose and send emails to the seller and buyer when an auction ends with a sale
