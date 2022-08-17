@@ -124,4 +124,27 @@ public class UserService implements IService<User> {
 
         return null;
     }
+
+    /**
+     * To add tokens to user account based on payment on Paypal
+     * @param tokens no of tokens to be added to user
+     * @param userId userId of the user who buys new tokens
+     * @return true if tokens added
+     */
+    public boolean addTokenAsPaypalAmount(int tokens, int userId){
+
+        User user = getById(userId);
+        if(tokens > 0 && user != null) {
+            int oldTokens = user.getTokens();
+            user.setTokens(oldTokens + tokens);
+            if(oldTokens + tokens == user.getTokens()){
+                userRepository.save(user);
+                return true;
+            } else {
+                return false;
+            }
+        } else{
+            return false;
+        }
+    }
 }
