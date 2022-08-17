@@ -29564,57 +29564,60 @@ if (bidForm) {
 }
 
 async function populateItemsContainer(itemsContainer) {
-      // Get current ongoing auctions
-      let auctions = await getAllActiveAuctions();
-      let items = [];
-  
-      // Get information for each item in an ongoing auction
-      for (let i = 0; i < auctions.length; i++) {
-        let item = await getItem(auctions[i].itemId);
-        if (item) {
-          item.auctionId = auctions[i].auctionId;
-          items.push(item);
-        }
-      }
-  
-      // Add each item to the items container
-      itemsContainer.textContent = "";  // remove all children
-      for (let i = 0; i < items.length; i++) {
-        let item = items[i];
-        let card = this.document.createElement('div');
-        card.classList.add('gallery');
-  
-        let imgEle = this.document.createElement('img');
-        // TODO add item's image
-        card.appendChild(imgEle);
-        
-        let titleEle = this.document.createElement('p');
-        titleEle.textContent = item.title;
-        card.appendChild(titleEle);
-  
-        let descEle = this.document.createElement('p');
-        descEle.textContent = item.description;
-        card.appendChild(descEle);
-  
-        let categoryEle = this.document.createElement('p');
-        categoryEle.textContent = 'Category: ' + item.category;
-        card.appendChild(categoryEle);
-  
-        let viewEle = this.document.createElement('button');
-        viewEle.textContent = 'View';
-        viewEle.addEventListener('click', () => {
-          this.window.location.href = '/auction.html?auctionId=' + item.auctionId;
-        });
-        card.appendChild(viewEle);
-        itemsContainer.appendChild(card);
-      }
-  
-      console.log(auctions);
-      console.log(items);
+  // Get current ongoing auctions
+  let auctions = await getAllActiveAuctions();
+  let items = [];
+
+  // Get information for each item in an ongoing auction
+  for (let i = 0; i < auctions.length; i++) {
+    let item = await getItem(auctions[i].itemId);
+    if (item) {
+      item.auctionId = auctions[i].auctionId;
+      items.push(item);
+    }
+  }
+
+  // Add each item to the items container
+  itemsContainer.textContent = ''; // remove all children
+  for (let i = 0; i < items.length; i++) {
+    let item = items[i];
+    let card = this.document.createElement('div');
+    card.classList.add('gallery');
+
+    let imgEle = this.document.createElement('img');
+    imgEle.src = item.imageUrl;
+    imgEle.style.height = '180px';
+    imgEle.style.width = '180px';
+    imgEle.style.objectFit = 'cover';
+    card.appendChild(imgEle);
+
+    let titleEle = this.document.createElement('p');
+    titleEle.textContent = item.title;
+    card.appendChild(titleEle);
+
+    let descEle = this.document.createElement('p');
+    descEle.textContent = item.description;
+    card.appendChild(descEle);
+
+    let categoryEle = this.document.createElement('p');
+    categoryEle.textContent = 'Category: ' + item.category;
+    card.appendChild(categoryEle);
+
+    let viewEle = this.document.createElement('button');
+    viewEle.textContent = 'View';
+    viewEle.addEventListener('click', () => {
+      this.window.location.href = '/auction.html?auctionId=' + item.auctionId;
+    });
+    card.appendChild(viewEle);
+    itemsContainer.appendChild(card);
+  }
+
+  console.log(auctions);
+  console.log(items);
 }
 
 async function displayAuctionDetails(auctionId, detailContainer) {
-  detailContainer.textContent = ""; // remove all children
+  detailContainer.textContent = ''; // remove all children
 
   const auction = await getAuction(auctionId);
   if (!auction) return;
@@ -29624,7 +29627,10 @@ async function displayAuctionDetails(auctionId, detailContainer) {
   console.log(highestBid);
 
   let imgEle = document.createElement('img');
-  // TODO add item's image
+  imgEle.src = item.imageUrl;
+  imgEle.style.height = '180px';
+  imgEle.style.width = '180px';
+  imgEle.style.objectFit = 'cover';
   detailContainer.appendChild(imgEle);
 
   let titleEle = document.createElement('div');
@@ -29644,7 +29650,7 @@ async function displayAuctionDetails(auctionId, detailContainer) {
   detailContainer.appendChild(currentBidEle);
 }
 
-window.addEventListener('DOMContentLoaded', async function(e) {
+window.addEventListener('DOMContentLoaded', async function (e) {
   // Array of url query parameters
   const urlParams = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
@@ -29656,12 +29662,10 @@ window.addEventListener('DOMContentLoaded', async function(e) {
 
   // On auction.html display auction details
   const detailContainer = this.document.getElementById('item-detail-container');
-  if (detailContainer) displayAuctionDetails(urlParams.auctionId, detailContainer);
-
-
-  
-
+  if (detailContainer)
+    displayAuctionDetails(urlParams.auctionId, detailContainer);
 });
+
 })();
 
 /******/ })()
