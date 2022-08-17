@@ -29445,9 +29445,13 @@ if (loginForm) {
     console.log(response);
 
     if (response.ok) {
+      let validatedUser = await response.json();
       console.log('User logged in!');
+      console.log(validatedUser);
+      window.sessionStorage.setItem('userId', validatedUser.userId);
       window.location.href = '/explore.html';
     } else {
+      window.sessionStorage.removeItem('userId');
       console.log('Failed to log in user');
     }
   });
@@ -29458,6 +29462,11 @@ if (itemForm) {
   itemForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
+    let userId = window.sessionStorage.getItem('userId');
+    if (userId === null) {
+      window.location.href = '/login.html';
+    }
+
     // Get the form values
     const data = new FormData(e.target);
 
@@ -29467,7 +29476,7 @@ if (itemForm) {
     }
 
     let item = {};
-    item.userId = 1; // TODO: get userID from session
+    item.userId = userId;
     item.title = data.get('title');
     item.description = data.get('description');
     item.category = data.get('category');
@@ -29538,22 +29547,27 @@ if (bidForm) {
   bidForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
+    let userId = window.sessionStorage.getItem('userId');
+    if (userId === null) {
+      window.location.href = '/login.html';
+    }
+
     // Array of url query parameters
     const urlParams = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
+      get: (searchParams, prop) => searchParams.get(prop)
     });
 
     // Get the form values
     const data = new FormData(e.target);
     let bid = {};
-    bid.userId = 1; // TODO: get userId from session
+    bid.userId = userId;
     bid.auctionId = urlParams.auctionId;
     bid.bid = data.get('bid');
 
     // Add new bid to database
     let response = await addBid(bid);
     if (response.ok) {
-      console.log('Bid added!');
+      alert('Bid added!');
     } else if (response.status === 409) {
       let body = await response.text();
       alert(body);
@@ -29563,7 +29577,7 @@ if (bidForm) {
   });
 }
 
-async function populateItemsContainer(itemsContainer) {
+async function populateAuctionsContainer(auctionsContainer) {
   // Get current ongoing auctions
   let auctions = await getAllActiveAuctions();
   let items = [];
@@ -29578,7 +29592,7 @@ async function populateItemsContainer(itemsContainer) {
   }
 
   // Add each item to the items container
-  itemsContainer.textContent = ''; // remove all children
+  auctionsContainer.textContent = ''; // remove all children
   for (let i = 0; i < items.length; i++) {
     let item = items[i];
     let card = this.document.createElement('div');
@@ -29609,7 +29623,7 @@ async function populateItemsContainer(itemsContainer) {
       this.window.location.href = '/auction.html?auctionId=' + item.auctionId;
     });
     card.appendChild(viewEle);
-    itemsContainer.appendChild(card);
+    auctionsContainer.appendChild(card);
   }
 
   console.log(auctions);
@@ -29653,12 +29667,13 @@ async function displayAuctionDetails(auctionId, detailContainer) {
 window.addEventListener('DOMContentLoaded', async function (e) {
   // Array of url query parameters
   const urlParams = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
+    get: (searchParams, prop) => searchParams.get(prop)
   });
 
   // On explore.html display current items for auction
-  const itemsContainer = this.document.getElementById('items-container');
-  if (itemsContainer) populateItemsContainer(itemsContainer);
+  const auctionsContainer = this.document.getElementById('auctions-container');
+  if (auctionsContainer)
+    populateAuctionsContainer(auctionsContainer);
 
   // On auction.html display auction details
   const detailContainer = this.document.getElementById('item-detail-container');
