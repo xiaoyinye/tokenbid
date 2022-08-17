@@ -111,8 +111,8 @@ public class UserController implements IController<User> {
      * @param tokens number of tokens to be added
      * @return
      */
-    @PutMapping(path = "/{id}/add-token/{add-tokens}")
-    public ResponseEntity<String> addTokens(@PathVariable("id") int userId, @PathVariable("add-tokens") int tokens) {
+    @PutMapping(path = "/{id}/add-token", consumes = "application/json")
+    public ResponseEntity<String> addTokens(@PathVariable("id") int userId, @RequestBody int tokens) {
 
         if (userService.getById(userId) != null) {
             if (userService.addTokenAsPaypalAmount(tokens, userId)) {
