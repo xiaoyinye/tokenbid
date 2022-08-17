@@ -118,10 +118,10 @@ public class UserController implements IController<User> {
             if (userService.addTokenAsPaypalAmount(tokens, userId)) {
                 return ResponseEntity.ok("Tokens added to the user with user ID: " + userId);
             }
-            return ResponseEntity.ok("Tokens can not be added to the user with user ID:" + userId);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Tokens can not be added to the user with user ID:\" + userId");
         }
         else {
-            return ResponseEntity.ok("User with user ID: " + userId+ " does not exist");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User with user ID: \" + userId+ \" does not exist");
         }
     }
 }
