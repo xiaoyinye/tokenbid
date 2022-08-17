@@ -74,4 +74,7 @@ public class AuctionController implements IController<Auction> {
         return ResponseEntity.ok(auctionService.getAll());
     }
 
+    @GetMapping(path = "/active", produces = "application/json")
+    public ResponseEntity<List<Auction>> getActive() { return ResponseEntity.ok(auctionService.getActive()); }
+
 }

@@ -11,6 +11,7 @@ const getAuction = fetchRequests.getAuction;
 const getBid = fetchRequests.getBid;
 const getItemsByCategory = fetchRequests.getItemsByCategory;
 const getAllItems = fetchRequests.getAllItems;
+const getAllActiveAuctions = fetchRequests.getAllActiveAuctions;
 const updateUser = fetchRequests.updateUser;
 const updateItem = fetchRequests.updateItem;
 const updateAuction = fetchRequests.updateAuction;
@@ -178,3 +179,53 @@ if (bidForm) {
     }
   });
 }
+
+window.addEventListener('DOMContentLoaded', async function(e) {
+  const itemsContainer = this.document.getElementById('items-container');
+  if (itemsContainer) {
+    // Get current ongoing auctions
+    let auctions = await getAllActiveAuctions();
+    let items = [];
+
+    // Get information for each item in an ongoing auction
+    for (let i = 0; i < auctions.length; i++) {
+      let item = await getItem(auctions[i].itemId);
+      if (item) items.push(item);
+    }
+
+    // Add each item to the items container
+    itemsContainer.textContent = "";  // remove all children
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i];
+      let card = this.document.createElement('div');
+      card.classList.add('gallery');
+
+      let imgEle = this.document.createElement('img');
+      // TODO add item's image
+      card.appendChild(imgEle);
+      
+      let titleEle = this.document.createElement('p');
+      titleEle.textContent = item.title;
+      card.appendChild(titleEle);
+
+      let descEle = this.document.createElement('p');
+      descEle.textContent = item.description;
+      card.appendChild(descEle);
+
+      let categoryEle = this.document.createElement('p');
+      categoryEle.textContent = 'Category: ' + item.category;
+      card.appendChild(categoryEle);
+
+      let viewEle = this.document.createElement('button');
+      viewEle.textContent = 'View';
+      viewEle.addEventListener('click', () => {
+        this.window.location.href = '/auction.html?itemId=' + item.itemId;
+      });
+      card.appendChild(viewEle);
+      itemsContainer.appendChild(card);
+    }
+
+    console.log(auctions);
+    console.log(items);
+  }
+});

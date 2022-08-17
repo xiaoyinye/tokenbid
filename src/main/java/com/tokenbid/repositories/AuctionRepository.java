@@ -11,17 +11,16 @@ import java.util.List;
 
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction, Integer> {
-    /**
-     * Finds the auction with the earliest end time
-     *
-     * @return Auction with the earliest end time
-     */
-    @Query(value = "SELECT * FROM auctions ORDER BY end_time ASC LIMIT 1;", nativeQuery = true)
-    Auction findByEarliestEndTime();
 
-    @Query(value = "SELECT * FROM auctions WHERE status = 'In Progress' and end_time < (NOW() + INTERVAL '1 hour') ORDER BY end_time ASC", nativeQuery = true)
+    /**
+     * @return A list of auctions that have an end time less than 1hour from now
+     */
+    @Query(value = "SELECT * FROM auctions WHERE status = 'In Progress' AND end_time < (NOW() + INTERVAL '1 hour') ORDER BY end_time ASC", nativeQuery = true)
     List<Auction> findAuctionsEndingInNextHour();
 
-    @Query(value = "SELECT starting_bid FROM auctions WHERE auctionId =: auctionId", nativeQuery = true)
-    int getStartingBid(@Param("auctionId") int auctionId);
+    /**
+     * @return A list of auctions that have an 'In Progress' status and haven't ended
+     */
+    @Query(value = "SELECT * FROM auctions WHERE status = 'In Progress' AND end_time > NOW() ORDER BY end_time ASC", nativeQuery = true)
+    List<Auction> findAllActiveAuctions();
 }

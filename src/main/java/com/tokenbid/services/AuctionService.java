@@ -100,22 +100,18 @@ public class AuctionService implements IService<Auction> {
     }
 
     /**
-     * @return Auction with the earliest end time in the past or null if no auction has ended
-     */
-    public Auction getEarliestExpiredAuction() {
-        Auction earliestEndAuction = auctionRepository.findByEarliestEndTime();
-        if (earliestEndAuction.getEndTime().before(Timestamp.from(Instant.now())))
-            return earliestEndAuction;
-        return null;
-    }
-
-    /**
      * @return A list of auctions with an end time less than 1 hour from the current time
      */
     public List<Auction> getAuctionsEndingInOneHour() {
         return auctionRepository.findAuctionsEndingInNextHour();
     }
 
+    /**
+     * @return A list of auctions with a status of 'In Progress' and an end time in the future
+     */
+    public List<Auction> getActive() {
+        return auctionRepository.findAllActiveAuctions();
+    }
 
     /**
      * Compose and send emails to the seller and buyer when an auction ends with a sale
