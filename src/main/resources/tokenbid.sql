@@ -15,6 +15,7 @@ create table if not exists items(
 	category varchar(50) not null,
 	title varchar(100) not null,
 	description text not null,
+	image_url text default 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png',
 	foreign key (user_id) references users(user_id)
 );
 
