@@ -2,9 +2,9 @@ package com.tokenbid.services;
 
 import java.util.List;
 
-import org.omg.SendingContext.RunTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tokenbid.models.User;
 import com.tokenbid.repositories.UserRepository;
@@ -27,7 +27,8 @@ public class UserService implements IService<User> {
         if (userRepository.existsByEmail(user.getEmail()))
             throw new IllegalArgumentException("Email is unavailable");
         User newUser = userRepository.save(user);
-        String activationLink = "http://localhost:8080/users/" + newUser.getUserId() + "/verify";
+        final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        String activationLink = baseUrl + "/users/" + newUser.getUserId() + "/verify";
         String message = buildRegistrationEmail(newUser.getFirstName(), newUser.getLastName(), activationLink);
         emailService.sendHTMLEmail(newUser.getEmail(), "Welcome to TokenBid!", message);
         return newUser.getUserId();
@@ -103,7 +104,7 @@ public class UserService implements IService<User> {
                 "<p style=\"margin-top: 1.5em;\">Thank you for registering with TokenBid. Please click on the link below to activate your account:</p>"
                 +
                 "<p style=\"margin-top: 1.5em; margin-left: 2em; background-color: #ddd; padding: 0.5em;\"><a href="
-                + activationLink + ">" + activationLink + "</a></p>" +
+                + activationLink + ">Activate</a></p>" +
                 "</div>";
     }
 
