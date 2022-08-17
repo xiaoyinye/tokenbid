@@ -61,6 +61,18 @@ async function getItemsByCategory(category) {
   // TODO add endpoint to query by category
 }
 
+async function getAllActiveAuctions() {
+  const response = await sendRequest('GET', '/auctions/active')
+  if (!response.ok) return null;
+  return response.json();
+}
+
+async function getHighestBid(itemId) {
+  const response = await sendRequest('GET', 'highest-bid/' + itemId);
+  if (!response.ok) return null;
+  return response.json();
+}
+
 async function getAllItems() {
   const response = await sendRequest('GET', '/items/all');
   if (!response.ok) return null;
@@ -97,6 +109,8 @@ module.exports = {
   getBid,
   getItemsByCategory,
   getAllItems,
+  getAllActiveAuctions,
+  getHighestBid,
   updateUser,
   updateItem,
   updateAuction,
