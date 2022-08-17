@@ -29441,16 +29441,27 @@ const itemForm = document.getElementById('item-form');
 if (itemForm) {
   itemForm.addEventListener('submit', async function (e) {
     e.preventDefault();
-    const image = document.getElementById('image').files[0];
 
     // Get the form values
     const data = new FormData(e.target);
+
+    if (data.get('title') === '' || data.get('description') === '') {
+      alert('Please fill out all fields');
+      return;
+    }
 
     let item = {};
     item.userId = 1; // TODO: get userID from session
     item.title = data.get('title');
     item.description = data.get('description');
     item.category = data.get('category');
+
+    const image = document.getElementById('image').files[0];
+
+    if (image === undefined) {
+      alert('Please upload an image');
+      return;
+    }
 
     // Create a random image name
     const randomImageName =
@@ -29471,6 +29482,7 @@ if (itemForm) {
     let response = await addItem(item);
     if (response.ok) {
       console.log('Item added!');
+      window.location.href = '/explore.html';
     } else {
       console.log('Failed to add item');
     }
