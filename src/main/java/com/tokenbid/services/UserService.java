@@ -2,6 +2,7 @@ package com.tokenbid.services;
 
 import java.util.List;
 
+import com.tokenbid.utils.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -12,12 +13,12 @@ import com.tokenbid.repositories.UserRepository;
 @Service
 public class UserService implements IService<User> {
     private UserRepository userRepository;
-    private EmailService emailService;
+    private EmailUtil emailUtil;
 
     @Autowired
-    public UserService(UserRepository userRepository, EmailService emailService) {
+    public UserService(UserRepository userRepository, EmailUtil emailUtil) {
         this.userRepository = userRepository;
-        this.emailService = emailService;
+        this.emailUtil = emailUtil;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class UserService implements IService<User> {
         final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         String activationLink = baseUrl + "/users/" + newUser.getUserId() + "/verify";
         String message = buildRegistrationEmail(newUser.getFirstName(), newUser.getLastName(), activationLink);
-        emailService.sendHTMLEmail(newUser.getEmail(), "Welcome to TokenBid!", message);
+        emailUtil.sendHTMLEmail(newUser.getEmail(), "Welcome to TokenBid!", message);
         return newUser.getUserId();
     }
 

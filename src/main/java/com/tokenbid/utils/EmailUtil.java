@@ -1,4 +1,4 @@
-package com.tokenbid.services;
+package com.tokenbid.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,8 +16,8 @@ import javax.mail.internet.MimeMessage;
  * Service class to send an email from "exceptions.tokenbid@gmail.com"
  */
 @Service
-public class EmailService {
-    private static final Logger log = LogManager.getLogger(EmailService.class);
+public class EmailUtil {
+    private static final Logger log = LogManager.getLogger(EmailUtil.class);
     private static final String from = "noreply@tokenbid.com";
 
     @Autowired
