@@ -125,7 +125,7 @@ public class AuctionService implements IService<Auction> {
      * @param item       Item being sold
      * @param winningBid The auction's winning bid
      */
-    private void notifySold(User seller, User buyer, Item item, Bid winningBid) {
+    protected void notifySold(User seller, User buyer, Item item, Bid winningBid) {
         String soldBody = "<div style=\"background-color:#ad8; min-height: 300px\">" +
                 "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em\">"
                 +
@@ -160,7 +160,7 @@ public class AuctionService implements IService<Auction> {
      * @param seller User selling the item
      * @param item   Item for auction that was not sold
      */
-    private void notifyNotSold(User seller, Item item) {
+    protected void notifyNotSold(User seller, Item item) {
         String notSoldBody = "<div style=\"background-color:#abc; min-height: 300px\">" +
                 "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em\">"
                 +
@@ -182,7 +182,7 @@ public class AuctionService implements IService<Auction> {
      * @param seller User selling the item
      * @param item   Item for auction
      */
-    private void notifyCancelled(User seller, Item item) {
+    protected void notifyCancelled(User seller, Item item) {
         String cancelledBody = "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em\">"
                 +
                 "<p style=\"margin: 0; padding: 0; text-align: center\">Cancelled</p>" +

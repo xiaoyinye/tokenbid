@@ -8,11 +8,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import java.util.Optional;
+
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-//don't have tests for update(), getEarliestExpiredAuction()
+//don't have tests for update()
 class AuctionServiceTest {
     private AuctionRepository auctionRepository = Mockito.mock(AuctionRepository.class);
     private EmailService emailService = Mockito.mock(EmailService.class);
@@ -38,6 +41,14 @@ class AuctionServiceTest {
         Mockito.when((auctionRepository.save(auction))).thenReturn(auction);
         int acutal = auctionService.add(auction);
         Assertions.assertEquals(auction.getAuctionId(), acutal);
+    }
+
+    @Test
+    public void shouldUpdateSold() {
+        Auction auction = new Auction();
+        auction.setStatus("Sold");
+        auction.setAuctionId(1);
+        Mockito.when(auctionRepository.findById(1)).thenReturn(Optional.of(auction));
     }
 
     @Test
@@ -89,11 +100,81 @@ class AuctionServiceTest {
     }
 
     @Test
+    public void shouldGetActiveAuction() {
+        auctionService.getActive();
+        verify(auctionRepository).findAllActiveAuctions();
+    }
+
+    @Test
     public void shouldNotifySold() {
         User seller = new User();
         User buyer = new User();
         Item item = new Item();
         Bid winningBid = new Bid();
+        auctionService.notifySold(seller,buyer,item,winningBid);
+        String soldBody = "<div style=\"background-color:#ad8; min-height: 300px\">" +
+                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em\">"
+                +
+                "<p style=\"margin: 0; padding: 0; text-align: center\">Item Sold</p>" +
+                "</div>" +
+                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 16px; margin: 0; padding-left:0.5em\">"
+                +
+                "<p style=\"margin-top: 1.5em\">Hi " + seller.getFirstName() + " " + seller.getLastName() + ",</p>" +
+                "<p style=\"margin-top: 1.5em\">Congratulations! Your item '" + item.getTitle() + "' was sold for "
+                + winningBid.getBid() + " tokens to " + buyer.getFirstName() + " " + buyer.getLastName() + ".</p>" +
+                "</div>" +
+                "</div>";
+        String boughtBody = "<div style=\"background-color:#ad8; min-height: 300px\">" +
+                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em\">"
+                +
+                "<p style=\"margin: 0; padding: 0; text-align: center\">Auction Won</p>" +
+                "</div>" +
+                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 16px; margin: 0; padding-left:0.5em\">"
+                +
+                "<p style=\"margin-top: 1.5em\">Hi " + buyer.getFirstName() + " " + buyer.getLastName() + ",</p>" +
+                "<p style=\"margin-top: 1.5em\">Congratulations! You won the bid for '" + item.getTitle() + "' at "
+                + winningBid.getBid() + " tokens.</p>" +
+                "</div>" +
+                "</div>";
+        verify(emailService).sendHTMLEmail(seller.getEmail(), "Auction Ended", soldBody);
+        verify(emailService).sendHTMLEmail(buyer.getEmail(), "Auction Ended", boughtBody);
+    }
 
+    @Test
+    public void shouldNotifyNotSold() {
+        User seller = new User();
+        Item item = new Item();
+        String notSoldBody = "<div style=\"background-color:#abc; min-height: 300px\">" +
+                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em\">"
+                +
+                "<p style=\"margin: 0; padding: 0; text-align: center\">Item Not Sold</p>" +
+                "</div>" +
+                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 16px; margin: 0; padding-left:0.5em\">"
+                +
+                "<p style=\"margin-top: 1.5em\">Hi " + seller.getFirstName() + " " + seller.getLastName() + ",</p>" +
+                "<p style=\"margin-top: 1.5em\">Your auction for item '" + item.getTitle()
+                + "' has ended with no successful bids.</p>" +
+                "</div>" +
+                "</div>";
+        auctionService.notifyNotSold(seller, item);
+        verify(emailService).sendHTMLEmail(seller.getEmail(), "Auction Ended", notSoldBody);
+    }
+
+    @Test
+    public void shouldNotifyCancelled() {
+        User seller = new User();
+        Item item = new Item();
+        String cancelledBody = "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em\">"
+                +
+                "<p style=\"margin: 0; padding: 0; text-align: center\">Cancelled</p>" +
+                "</div>" +
+                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 16px; margin: 0; padding-left:0.5em\">"
+                +
+                "<p style=\"margin-top: 1.5em\">Hi " + seller.getFirstName() + " " + seller.getLastName() + ",</p>" +
+                "<p style=\"margin-top: 1.5em\">Your auction for item '" + item.getTitle()
+                + "' was successful cancelled.</p>" +
+                "</div>";
+        auctionService.notifyCancelled(seller, item);
+        verify(emailService).sendHTMLEmail(seller.getEmail(), "Auction Ended", cancelledBody);
     }
 }
