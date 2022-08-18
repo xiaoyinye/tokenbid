@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 
-//Don't have tests for add()
 
 class BidServiceTest {
     private BidRepository bidRepository = Mockito.mock(BidRepository.class);
@@ -35,6 +34,7 @@ class BidServiceTest {
         bid.setBidId(1);
         bid.setAuctionId(1);
         bid.setUserId(1);
+        bid.setBid(10);
         return bid;
     }
 
@@ -94,6 +94,114 @@ class BidServiceTest {
         });
         assertTrue(exception.getMessage().contains("User cannot bid on their own item"));
     }
+
+    @Test
+    public void shouldFailWhenBidNotHighest() {
+        Bid newBid = createBid();
+        Auction auction = new Auction();
+        auction.setItemId(1);
+        Item item = new Item();
+        item.setUserId(2);
+        User user = new User();
+        Bid currentHighest = new Bid();
+        currentHighest.setBid(20);
+        Mockito.when(auctionRepository.findById(1)).thenReturn(Optional.of(auction));
+        Mockito.when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        Mockito.when(bidRepository.getHighestBidForAnAuction(1)).thenReturn(currentHighest);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            bidService.add(newBid);
+        });
+        assertTrue(exception.getMessage().contains("Bid must be higher than the current highest bid of " + currentHighest.getBid() + " tokens"));
+    }
+
+    @Test
+    public void shouldFailWhenBidNotHigherThanStaring() {
+        Bid newBid = createBid();
+        Auction auction = new Auction();
+        auction.setItemId(1);
+        auction.setStartingBid(15);
+        Item item = new Item();
+        item.setUserId(2);
+        User user = new User();
+        Mockito.when(auctionRepository.findById(1)).thenReturn(Optional.of(auction));
+        Mockito.when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        Mockito.when(bidRepository.getHighestBidForAnAuction(1)).thenReturn(null);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            bidService.add(newBid);
+        });
+        assertTrue(exception.getMessage().contains("Bid must be higher than the starting bid of " + "15" + " tokens"));
+    }
+
+    @Test
+    public void shouldFailWhenSameUserNotEnoughToken() {
+        Bid newBid = createBid();
+        Auction auction = new Auction();
+        auction.setItemId(1);
+        Item item = new Item();
+        item.setUserId(2);
+        User newBidUser = new User();
+        newBidUser.setUserId(1);
+        newBidUser.setTokens(3);
+        Bid currentHighest = new Bid();
+        currentHighest.setBid(5);
+        currentHighest.setUserId(1);
+        Mockito.when(auctionRepository.findById(1)).thenReturn(Optional.of(auction));
+        Mockito.when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(newBidUser));
+        Mockito.when(bidRepository.getHighestBidForAnAuction(1)).thenReturn(currentHighest);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            bidService.add(newBid);
+        });
+        assertTrue(exception.getMessage().contains("User does not have enough tokens"));
+    }
+
+    @Test
+    public void shouldFailWhenDifferentUserNotEnoughToken() {
+        Bid newBid = createBid();
+        Auction auction = new Auction();
+        auction.setItemId(1);
+        Item item = new Item();
+        item.setUserId(2);
+        User newBidUser = new User();
+        newBidUser.setUserId(1);
+        newBidUser.setTokens(3);
+        Bid currentHighest = new Bid();
+        currentHighest.setBid(5);
+        currentHighest.setUserId(3);
+        Mockito.when(auctionRepository.findById(1)).thenReturn(Optional.of(auction));
+        Mockito.when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(newBidUser));
+        Mockito.when(bidRepository.getHighestBidForAnAuction(1)).thenReturn(currentHighest);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            bidService.add(newBid);
+        });
+        assertTrue(exception.getMessage().contains("User does not have enough tokens"));
+    }
+
+    @Test
+    public void shouldAddNewBid() {
+        Bid newBid = createBid();
+        Auction auction = new Auction();
+        auction.setItemId(1);
+        Item item = new Item();
+        item.setUserId(2);
+        User newBidUser = new User();
+        newBidUser.setUserId(1);
+        newBidUser.setTokens(50);
+        Bid currentHighest = new Bid();
+        currentHighest.setBid(5);
+        currentHighest.setUserId(3);
+        Mockito.when(auctionRepository.findById(1)).thenReturn(Optional.of(auction));
+        Mockito.when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(newBidUser));
+        Mockito.when(bidRepository.getHighestBidForAnAuction(1)).thenReturn(currentHighest);
+        Mockito.when(bidRepository.save(newBid)).thenReturn(newBid);
+        int actual = bidService.add(newBid);
+        Assertions.assertEquals(1, actual);
+    }
+
 
 
     @Test

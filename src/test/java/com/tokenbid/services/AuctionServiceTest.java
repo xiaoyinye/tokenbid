@@ -41,50 +41,24 @@ class AuctionServiceTest {
         Assertions.assertEquals(auction.getAuctionId(), acutal);
     }
 
-    @Test
-    public void shouldUpdateSold() {
-        Auction auction = new Auction();
-        auction.setStatus("Sold");
-        auction.setAuctionId(1);
-        Item item = new Item();
-        item.setItemId(1);
-        User seller = new User();
-        seller.setUserId(1);
-        Bid winningBid = new Bid();
-        winningBid.setUserId(2);
-        User buyer = new User();
-        Mockito.when(auctionRepository.findById(1)).thenReturn(Optional.of(auction));
-        Mockito.when(itemService.getById(1)).thenReturn(item);
-        Mockito.when(userService.getById(1)).thenReturn(seller);
-        Mockito.when(bidService.getHighestBidForAnAuction(1)).thenReturn(winningBid);
-        Mockito.when(userService.getById(2)).thenReturn(buyer);
-//        String soldBody = "<div style=\"background-color:#ad8; min-height: 300px\">" +
-//                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em\">"
-//                +
-//                "<p style=\"margin: 0; padding: 0; text-align: center\">Item Sold</p>" +
-//                "</div>" +
-//                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 16px; margin: 0; padding-left:0.5em\">"
-//                +
-//                "<p style=\"margin-top: 1.5em\">Hi " + seller.getFirstName() + " " + seller.getLastName() + ",</p>" +
-//                "<p style=\"margin-top: 1.5em\">Congratulations! Your item '" + item.getTitle() + "' was sold for "
-//                + winningBid.getBid() + " tokens to " + buyer.getFirstName() + " " + buyer.getLastName() + ".</p>" +
-//                "</div>" +
-//                "</div>";
-//        String boughtBody = "<div style=\"background-color:#ad8; min-height: 300px\">" +
-//                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em\">"
-//                +
-//                "<p style=\"margin: 0; padding: 0; text-align: center\">Auction Won</p>" +
-//                "</div>" +
-//                "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 16px; margin: 0; padding-left:0.5em\">"
-//                +
-//                "<p style=\"margin-top: 1.5em\">Hi " + buyer.getFirstName() + " " + buyer.getLastName() + ",</p>" +
-//                "<p style=\"margin-top: 1.5em\">Congratulations! You won the bid for '" + item.getTitle() + "' at "
-//                + winningBid.getBid() + " tokens.</p>" +
-//                "</div>" +
-//                "</div>";
-//        verify(emailService).sendHTMLEmail(seller.getEmail(), "Auction Ended", soldBody);
-//        verify(emailService).sendHTMLEmail(buyer.getEmail(), "Auction Ended", boughtBody);
-    }
+//    @Test
+//    public void shouldUpdateSold() {
+//        Auction auction = new Auction();
+//        auction.setStatus("Sold");
+//        auction.setAuctionId(1);
+//        Item item = new Item();
+//        item.setItemId(1);
+//        User seller = new User();
+//        seller.setUserId(1);
+//        Bid winningBid = new Bid();
+//        winningBid.setUserId(2);
+//        User buyer = new User();
+//        Mockito.when(auctionRepository.findById(1)).thenReturn(Optional.of(auction));
+//        Mockito.when(itemService.getById(1)).thenReturn(item);
+//        Mockito.when(userService.getById(1)).thenReturn(seller);
+//        Mockito.when(bidService.getHighestBidForAnAuction(1)).thenReturn(winningBid);
+//        Mockito.when(userService.getById(2)).thenReturn(buyer);
+//    }
 
     @Test
     public void shouldProcessSale() {
