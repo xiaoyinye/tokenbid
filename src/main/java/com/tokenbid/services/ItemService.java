@@ -2,6 +2,9 @@ package com.tokenbid.services;
 
 import java.util.List;
 
+import com.tokenbid.controllers.AuctionController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +14,7 @@ import com.tokenbid.repositories.ItemRepository;
 @Service
 public class ItemService implements IService<Item> {
     private ItemRepository itemRepository;
+    private static Logger logger = LogManager.getLogger(AuctionController.class.getName());
 
     @Autowired
     public ItemService(ItemRepository itemRepository) {
@@ -56,6 +60,7 @@ public class ItemService implements IService<Item> {
      * @return A list of all available items that are not currently being auctioned
      */
     public List<Item> getAllAvailableItems(int userId) {
+        logger.debug("Getting all available items");
         return itemRepository.findAllAvailableItems(userId);
     }
 }

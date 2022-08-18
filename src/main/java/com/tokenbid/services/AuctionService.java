@@ -2,10 +2,13 @@ package com.tokenbid.services;
 
 import java.util.List;
 
+import com.tokenbid.controllers.AuctionController;
 import com.tokenbid.models.Bid;
 import com.tokenbid.models.Item;
 import com.tokenbid.models.User;
 import com.tokenbid.utils.EmailUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ public class AuctionService implements IService<Auction> {
     private ItemService itemService;
     private BidService bidService;
     private UserService userService;
+    private static Logger logger = LogManager.getLogger(AuctionController.class.getName());
 
     @Autowired
     public AuctionService(AuctionRepository auctionRepository, EmailUtil emailUtil, ItemService itemService,
@@ -37,6 +41,7 @@ public class AuctionService implements IService<Auction> {
 
     @Override
     public void update(Auction auction) {
+        logger.debug("Updating auction with auction ID: "+auction.getAuctionId());
         if (auctionRepository.findById(auction.getAuctionId()).isPresent()) {
             auctionRepository.save(auction);
             Item item = itemService.getById(auction.getItemId());
@@ -70,14 +75,14 @@ public class AuctionService implements IService<Auction> {
      * @param seller User selling the item
      */
     protected void processSale(Item item, Bid bid, User buyer, User seller) {
-        // transfer item ownership
+        logger.debug("Transferring the ownership");
         item.setUserId(buyer.getUserId());
         itemService.update(item);
 
-        // process token transfer
+       logger.debug("tokens added to seller");
         seller.setTokens(seller.getTokens() + bid.getBid());
 
-        // delete all bids for this auction
+        logger.debug("delete all bids for this auction");
         bidService.deleteForAuction(bid.getAuctionId());
     }
 
@@ -114,6 +119,7 @@ public class AuctionService implements IService<Auction> {
      *         the future
      */
     public List<Auction> getActive() {
+        logger.debug("Getting active auctions");
         return auctionRepository.findAllActiveAuctions();
     }
 
