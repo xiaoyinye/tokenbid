@@ -33,18 +33,18 @@
               <div class="row no-gutters">
                 <div class="col-md-6 d-flex align-items-stretch">
                   <div class="contact-wrap w-100 p-md-5 p-4 py-5">
-                    <h3 class="mb-4">Auction Id X:</h3>
-                    <div id="form-message-warning" class="mb-4"></div>
+                    <h3 class="mb-4">Auction Info</h3>
 
-                    <form id="bid-form" class="mb-4">
-                      <p style="color: white; margin: 0">Bid Amount:</p>
-                      <input name="bidAmount" type="number" min="0" />
-                      <button type="submit">Submit</button>
+                    <form id="bid-form" style="display: block">
+                      <p style="color: white; margin: 0">Bid Amount</p>
+                      <input
+                        name="bidAmount"
+                        style="margin-bottom: 1em"
+                        type="number"
+                        min="0"
+                      />
+                      <button type="submit" class="button-19">Set Bid</button>
                     </form>
-
-                    <button onclick="showBidForm();" class="button-19">
-                      Set Bid
-                    </button>
                     <div style="padding: 5%"></div>
                   </div>
                 </div>
@@ -79,8 +79,8 @@
   </body>
 </html>
 
-<script>
+<!-- <script>
   function showBidForm() {
     document.getElementById('bid-form').style.display = 'block';
   }
-</script>
+</script> -->
