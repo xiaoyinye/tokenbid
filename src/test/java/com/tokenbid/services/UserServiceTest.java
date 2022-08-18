@@ -2,6 +2,7 @@ package com.tokenbid.services;
 
 import com.tokenbid.models.User;
 import com.tokenbid.repositories.UserRepository;
+import com.tokenbid.utils.EmailUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,12 +13,12 @@ import static org.mockito.Mockito.verify;
 //don't have test for buildRegistrationEmail()
 class UserServiceTest {
     private UserRepository userRepository = Mockito.mock(UserRepository.class);
-    private EmailService emailService = Mockito.mock(EmailService.class);
+    private EmailUtil emailUtil = Mockito.mock(EmailUtil.class);
     private UserService userService;
 
     @BeforeEach
     public void initBefore() {
-        userService = new UserService(userRepository,emailService);
+        userService = new UserService(userRepository,emailUtil);
     }
     private User createUser() {
         User user = new User();

@@ -4,6 +4,7 @@ import com.tokenbid.models.Bid;
 import com.tokenbid.models.Item;
 import com.tokenbid.models.User;
 import com.tokenbid.repositories.AuctionRepository;
+import com.tokenbid.utils.EmailUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,7 @@ import static org.mockito.Mockito.verify;
 //don't have tests for update()
 class AuctionServiceTest {
     private AuctionRepository auctionRepository = Mockito.mock(AuctionRepository.class);
-    private EmailService emailService = Mockito.mock(EmailService.class);
+    private EmailUtil emailUtil = Mockito.mock(EmailUtil.class);
     private ItemService itemService = Mockito.mock(ItemService.class);
     private BidService bidService = Mockito.mock(BidService.class);
     private UserService userService = Mockito.mock(UserService.class);
@@ -29,7 +30,7 @@ class AuctionServiceTest {
     }
     @BeforeEach
     public void initBefore() {
-       auctionService = new AuctionService(auctionRepository, emailService, itemService, bidService, userService);
+       auctionService = new AuctionService(auctionRepository, emailUtil, itemService, bidService, userService);
     }
 
     @Test
@@ -170,8 +171,8 @@ class AuctionServiceTest {
                 + winningBid.getBid() + " tokens.</p>" +
                 "</div>" +
                 "</div>";
-        verify(emailService).sendHTMLEmail(seller.getEmail(), "Auction Ended", soldBody);
-        verify(emailService).sendHTMLEmail(buyer.getEmail(), "Auction Ended", boughtBody);
+        verify(emailUtil).sendHTMLEmail(seller.getEmail(), "Auction Ended", soldBody);
+        verify(emailUtil).sendHTMLEmail(buyer.getEmail(), "Auction Ended", boughtBody);
     }
 
     @Test
@@ -191,7 +192,7 @@ class AuctionServiceTest {
                 "</div>" +
                 "</div>";
         auctionService.notifyNotSold(seller, item);
-        verify(emailService).sendHTMLEmail(seller.getEmail(), "Auction Ended", notSoldBody);
+        verify(emailUtil).sendHTMLEmail(seller.getEmail(), "Auction Ended", notSoldBody);
     }
 
     @Test
@@ -209,6 +210,6 @@ class AuctionServiceTest {
                 + "' was successful cancelled.</p>" +
                 "</div>";
         auctionService.notifyCancelled(seller, item);
-        verify(emailService).sendHTMLEmail(seller.getEmail(), "Auction Ended", cancelledBody);
+        verify(emailUtil).sendHTMLEmail(seller.getEmail(), "Auction Ended", cancelledBody);
     }
 }
