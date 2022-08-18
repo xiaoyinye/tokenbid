@@ -23,6 +23,9 @@ const updateBid = fetchRequests.updateBid;
 // Event listeners, TODO change names when forms are added, add input validation
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+  Register a new user and redirect to /login.html if successful
+*/
 const registerForm = document.getElementById("register-form");
 if (registerForm) {
   registerForm.addEventListener("submit", async function (e) {
@@ -52,6 +55,9 @@ if (registerForm) {
   });
 }
 
+/*
+  Validate a user login and redirect to /explore.html if successful
+*/
 const loginForm = document.getElementById("login-form");
 if (loginForm) {
   loginForm.addEventListener("submit", async function (e) {
@@ -76,11 +82,18 @@ if (loginForm) {
       window.location.href = "/explore.html";
     } else {
       window.sessionStorage.removeItem("userId");
+      if (response.status === 409)
+        alert("Please verify your email");
+      else
+        alert("Invalid login credentials");
       console.log("Failed to log in user");
     }
   });
 }
 
+/*
+  Logout the current user and redirect to /login.html
+*/
 const logOut = document.getElementById("logout");
 if (logOut) {
   logOut.addEventListener("click", async function (e) {
@@ -97,6 +110,9 @@ if (logOut) {
   });
 }
 
+/*
+  Update a user's information and reload the page if successful
+*/
 const profileForm = document.getElementById("profile-form");
 if (profileForm) {
   profileForm.addEventListener("submit", async function (e) {
@@ -143,6 +159,9 @@ if (profileForm) {
   });
 }
 
+/*
+  Add a new item and redirect to /action.html if successful
+*/
 const itemForm = document.getElementById("item-form");
 if (itemForm) {
   itemForm.addEventListener("submit", async function (e) {
@@ -195,11 +214,15 @@ if (itemForm) {
       console.log("Item added!");
       window.location.href = "/action.html";
     } else {
+      alert("Error adding new item");
       console.log("Failed to add item");
     }
   });
 }
 
+/*
+  Start an auction for an item and redirect to /explore.html if successful
+*/
 const auctionForm = document.getElementById("auction-form");
 if (auctionForm) {
   auctionForm.addEventListener("submit", async function (e) {
@@ -223,11 +246,15 @@ if (auctionForm) {
       window.location.href = "/explore.html";
       // TODO: Start a timer if auction was successfully added
     } else {
+      alert("Error adding auction");
       console.log("Failed to add auction");
     }
   });
 }
 
+/*
+  Place a bid on a current auction and update the displayed current bid value if successful
+*/
 const bidForm = document.getElementById("bid-form");
 if (bidForm) {
   bidForm.addEventListener("submit", async function (e) {
@@ -266,6 +293,9 @@ if (bidForm) {
   });
 }
 
+/*
+  Add items belonging to the current user not currently in auction to the item selector on the item-form
+*/
 async function populateItemsSelector(itemsSelector) {
   let userId = window.sessionStorage.getItem("userId");
 
@@ -286,6 +316,9 @@ async function populateItemsSelector(itemsSelector) {
   }
 }
 
+/*
+  Display currently ongoing auctions
+*/
 async function populateAuctionsContainer(auctionsContainer) {
   // Get current ongoing auctions
   let auctions = await getAllActiveAuctions();
@@ -339,6 +372,9 @@ async function populateAuctionsContainer(auctionsContainer) {
   console.log(items);
 }
 
+/*
+  Display auction details
+*/
 async function displayAuctionDetails(auctionId, detailContainer) {
   detailContainer.textContent = ""; // remove all children
 
@@ -388,6 +424,9 @@ async function displayAuctionDetails(auctionId, detailContainer) {
   detailContainer.appendChild(timeLeftEle);
 }
 
+/*
+  Display user's details
+*/
 async function displayProfileInformation(profileContainer) {
   const userId = sessionStorage.getItem("userId");
   if (userId === null) {
@@ -417,6 +456,9 @@ async function displayProfileInformation(profileContainer) {
   if (tokensEle) tokensEle.textContent = user.tokens;
 }
 
+/*
+  Actions to take on page load
+*/
 window.addEventListener("DOMContentLoaded", async function (e) {
   // Array of url query parameters
   const urlParams = new Proxy(new URLSearchParams(window.location.search), {
