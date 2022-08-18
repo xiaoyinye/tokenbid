@@ -239,7 +239,8 @@ if (bidForm) {
     if (response.ok) {
       alert('Bid added!');
       let currentBidEle = document.getElementById('current-bid');
-      if (currentBidEle) currentBidEle.textContent = 'Current Bid: ' + bid.bid + ' tokens';
+      if (currentBidEle)
+        currentBidEle.textContent = 'Current Bid: ' + bid.bid + ' tokens';
     } else if (response.status === 409) {
       let body = await response.text();
       alert(body);
@@ -355,6 +356,20 @@ async function displayAuctionDetails(auctionId, detailContainer) {
   let bid = highestBid ? highestBid.bid : auction.startingBid;
   currentBidEle.textContent = 'Current Bid: ' + bid + ' tokens';
   detailContainer.appendChild(currentBidEle);
+
+  let timeLeftEle = document.createElement('div');
+  timeLeftEle.classList.add('desc');
+  timeLeftEle.id = 'time-left';
+  let end = new Date(auction.endTime);
+  let timeLeft = end.getHours() - new Date().getHours();
+  if (timeLeft <= 1) {
+    let minutes = Math.floor((end.getTime() - new Date().getTime()) / 60000);
+    timeLeftEle.textContent = 'Time Left: ' + minutes + ' minutes';
+  } else {
+    timeLeftEle.textContent = 'Time Left: ' + timeLeft + ' hours';
+  }
+
+  detailContainer.appendChild(timeLeftEle);
 }
 
 async function displayProfileInformation(profileContainer) {
