@@ -23,6 +23,9 @@ const updateBid = fetchRequests.updateBid;
 // Event listeners, TODO change names when forms are added, add input validation
 /////////////////////////////////////////////////////////////////////////////
 
+/*
+  Register a new user and redirect to /login.html if successful
+*/
 const registerForm = document.getElementById("register-form");
 if (registerForm) {
   registerForm.addEventListener("submit", async function (e) {
@@ -52,6 +55,9 @@ if (registerForm) {
   });
 }
 
+/*
+  Validate a user login and redirect to /explore.html if successful
+*/
 const loginForm = document.getElementById("login-form");
 if (loginForm) {
   loginForm.addEventListener("submit", async function (e) {
@@ -76,11 +82,18 @@ if (loginForm) {
       window.location.href = "/explore.html";
     } else {
       window.sessionStorage.removeItem("userId");
+      if (response.status === 409)
+        alert("Please verify your email");
+      else
+        alert("Invalid login credentials");
       console.log("Failed to log in user");
     }
   });
 }
 
+/*
+  Logout the current user and redirect to /login.html
+*/
 const logOut = document.getElementById("logout");
 if (logOut) {
   logOut.addEventListener("click", async function (e) {
@@ -97,6 +110,9 @@ if (logOut) {
   });
 }
 
+/*
+  Update a user's information and reload the page if successful
+*/
 const profileForm = document.getElementById("profile-form");
 if (profileForm) {
   profileForm.addEventListener("submit", async function (e) {
@@ -143,6 +159,9 @@ if (profileForm) {
   });
 }
 
+/*
+  Add a new item and redirect to /action.html if successful
+*/
 const itemForm = document.getElementById("item-form");
 if (itemForm) {
   itemForm.addEventListener("submit", async function (e) {
@@ -195,11 +214,15 @@ if (itemForm) {
       console.log("Item added!");
       window.location.href = "/action.html";
     } else {
+      alert("Error adding new item");
       console.log("Failed to add item");
     }
   });
 }
 
+/*
+  Start an auction for an item and redirect to /explore.html if successful
+*/
 const auctionForm = document.getElementById("auction-form");
 if (auctionForm) {
   auctionForm.addEventListener("submit", async function (e) {
@@ -221,13 +244,16 @@ if (auctionForm) {
     if (response.ok) {
       console.log("Auction added!");
       window.location.href = "/explore.html";
-      // TODO: Start a timer if auction was successfully added
     } else {
+      alert("Error adding auction");
       console.log("Failed to add auction");
     }
   });
 }
 
+/*
+  Place a bid on a current auction and update the displayed current bid value if successful
+*/
 const bidForm = document.getElementById("bid-form");
 if (bidForm) {
   bidForm.addEventListener("submit", async function (e) {
@@ -266,6 +292,9 @@ if (bidForm) {
   });
 }
 
+/*
+  Add items belonging to the current user not currently in auction to the item selector on the item-form
+*/
 async function populateItemsSelector(itemsSelector) {
   let userId = window.sessionStorage.getItem("userId");
 
@@ -286,6 +315,9 @@ async function populateItemsSelector(itemsSelector) {
   }
 }
 
+/*
+  Display currently ongoing auctions
+*/
 async function populateAuctionsContainer(auctionsContainer) {
   // Get current ongoing auctions
   let auctions = await getAllActiveAuctions();
@@ -295,12 +327,12 @@ async function populateAuctionsContainer(auctionsContainer) {
   for (let i = 0; i < auctions.length; i++) {
     let item = await getItem(auctions[i].itemId);
     if (item) {
-      item.auctionId = auctions[i].auctionId;
+      item.associatedAuction = auctions[i];
       items.push(item);
     }
   }
 
-  // Add each item to the items container
+  // Add each item to the auctions container
   auctionsContainer.textContent = ""; // remove all children
   for (let i = 0; i < items.length; i++) {
     let item = items[i];
@@ -326,10 +358,14 @@ async function populateAuctionsContainer(auctionsContainer) {
     categoryEle.textContent = "Category: " + item.category;
     card.appendChild(categoryEle);
 
+    let timerEle = this.document.createElement("p");
+    startCountdownTimer(item.associatedAuction.endTime, timerEle);
+    card.appendChild(timerEle);
+
     let viewEle = this.document.createElement("button");
     viewEle.textContent = "View";
     viewEle.addEventListener("click", () => {
-      this.window.location.href = "/auction.html?auctionId=" + item.auctionId;
+      this.window.location.href = "/auction.html?auctionId=" + item.associatedAuction.auctionId;
     });
     card.appendChild(viewEle);
     auctionsContainer.appendChild(card);
@@ -339,11 +375,46 @@ async function populateAuctionsContainer(auctionsContainer) {
   console.log(items);
 }
 
+/*
+  Start a countdown timer on the display element with a specified end time
+*/
+function startCountdownTimer(endTime, display) {
+  let start = Date.now();
+  let end = Date.parse(endTime);
+  let duration = Math.floor((end - start) / 1000);
+  if (!duration || duration < 0) {
+    display.textContent = "00:00:00";
+    return;
+  }
+  let diff, hours, minutes, seconds, intervalId;
+  function timer() {
+    diff = duration - Math.floor(((Date.now() - start) / 1000));  // in seconds
+    if (diff < 0) { // timer has ended
+      clearInterval(intervalId);
+      return;
+    }
+    hours = Math.floor(diff / 3600);
+    seconds = diff - hours*3600;
+    minutes = Math.floor(seconds / 60);
+    seconds = seconds - minutes*60;
+    hours = hours < 10 ? "0" + hours : hours;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    display.textContent = hours + ":" + minutes + ":" + seconds;
+  };
+  timer();  // display immediately
+  intervalId = setInterval(timer, 1000);
+}
+
+/*
+  Display auction details
+*/
 async function displayAuctionDetails(auctionId, detailContainer) {
   detailContainer.textContent = ""; // remove all children
 
   const auction = await getAuction(auctionId);
   if (!auction) return;
+  console.log(auction.itemId);
   const item = await getItem(auction.itemId);
   if (!item) return;
   const highestBid = await getHighestBid(auctionId);
@@ -376,18 +447,23 @@ async function displayAuctionDetails(auctionId, detailContainer) {
   let timeLeftEle = document.createElement("div");
   timeLeftEle.classList.add("desc");
   timeLeftEle.id = "time-left";
-  let end = new Date(auction.endTime);
-  let timeLeft = end.getHours() - new Date().getHours();
-  if (timeLeft <= 1) {
-    let minutes = Math.floor((end.getTime() - new Date().getTime()) / 60000);
-    timeLeftEle.textContent = "Time Left: " + minutes + " minutes";
-  } else {
-    timeLeftEle.textContent = "Time Left: " + timeLeft + " hours";
-  }
+  console.log(auction.endTime);
+  startCountdownTimer(auction.endTime, timeLeftEle);
+  // let end = new Date(auction.endTime);
+  // let timeLeft = end.getHours() - new Date().getHours();
+  // if (timeLeft <= 1) {
+  //   let minutes = Math.floor((end.getTime() - new Date().getTime()) / 60000);
+  //   timeLeftEle.textContent = "Time Left: " + minutes + " minutes";
+  // } else {
+  //   timeLeftEle.textContent = "Time Left: " + timeLeft + " hours";
+  // }
 
   detailContainer.appendChild(timeLeftEle);
 }
 
+/*
+  Display user's details
+*/
 async function displayProfileInformation(profileContainer) {
   const userId = sessionStorage.getItem("userId");
   if (userId === null) {
@@ -417,6 +493,9 @@ async function displayProfileInformation(profileContainer) {
   if (tokensEle) tokensEle.textContent = user.tokens;
 }
 
+/*
+  Actions to take on page load
+*/
 window.addEventListener("DOMContentLoaded", async function (e) {
   // Array of url query parameters
   const urlParams = new Proxy(new URLSearchParams(window.location.search), {

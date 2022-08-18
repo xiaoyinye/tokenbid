@@ -4,6 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import com.tokenbid.services.BidService;
 @RequestMapping("/bids")
 public class BidController implements IController<Bid> {
     private BidService bidService;
+    private static Logger logger = LogManager.getLogger(AuctionController.class.getName());
 
     @Autowired
     public BidController(BidService bidService) {
@@ -33,6 +36,7 @@ public class BidController implements IController<Bid> {
     @PostMapping(path = "/add", consumes = "application/json")
     public ResponseEntity<String> add(@RequestBody Bid bid) throws URISyntaxException {
         try {
+            logger.debug("adding a new bid");
             return ResponseEntity.created(new URI("/bids/" + bidService.add(bid))).build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -42,6 +46,7 @@ public class BidController implements IController<Bid> {
     @Override
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<String> update(@PathVariable("id") int id, @RequestBody Bid updatedBid) {
+        logger.debug("Updating a bid with bid ID:" +id);
         if (bidService.getById(id) != null) {
             updatedBid.setBidId(id);
             bidService.update(updatedBid);
@@ -54,11 +59,11 @@ public class BidController implements IController<Bid> {
     @Override
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
+        logger.debug("deleting a bid with id: "+id);
         if (bidService.getById(id) != null) {
             bidService.delete(id);
             return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.notFound().build();
     }
 
@@ -87,11 +92,11 @@ public class BidController implements IController<Bid> {
      */
     @GetMapping(path = "/highest-bid/{id}", produces = "application/json")
     public ResponseEntity<Bid> getHighestBidAndUserId(@PathVariable("id") int auctionId) {
+        logger.debug("getting highest bid and user ID for auctoin ID: " +auctionId);
         Bid bid = bidService.getHighestBidForAnAuction(auctionId);
         if (bid != null) {
             return ResponseEntity.ok(bid);
         }
-
         return ResponseEntity.notFound().build();
     }
 }

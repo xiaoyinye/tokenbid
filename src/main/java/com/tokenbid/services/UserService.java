@@ -2,7 +2,10 @@ package com.tokenbid.services;
 
 import java.util.List;
 
+import com.tokenbid.controllers.AuctionController;
 import com.tokenbid.utils.EmailUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -12,8 +15,11 @@ import com.tokenbid.repositories.UserRepository;
 
 @Service
 public class UserService implements IService<User> {
+
+    private int freeTokens = 250;
     private UserRepository userRepository;
     private EmailUtil emailUtil;
+    private static Logger logger = LogManager.getLogger(AuctionController.class.getName());
 
     @Autowired
     public UserService(UserRepository userRepository, EmailUtil emailUtil) {
@@ -23,6 +29,7 @@ public class UserService implements IService<User> {
 
     @Override
     public int add(User user) throws IllegalArgumentException {
+        logger.debug("Adding a new user with userID: "+user.getUserId());
         if (userRepository.existsByUsername(user.getUsername()))
             throw new IllegalArgumentException("Username is unavailable");
         if (userRepository.existsByEmail(user.getEmail()))
@@ -45,6 +52,7 @@ public class UserService implements IService<User> {
                 currentUser.setLastName(user.getLastName());
             if (user.getPassword() != null)
                 currentUser.setPassword(user.getPassword());
+            logger.debug("Updating the user with userID: "+user.getUserId());
             userRepository.save(currentUser);
         }
     }
@@ -82,7 +90,8 @@ public class UserService implements IService<User> {
                 !userRepository.findById(userId).get().isEmailVerified()) {
             User user = getById(userId);
             user.setEmailVerified(true);
-            user.setTokens(250);
+            user.setTokens(freeTokens);
+            logger.debug("user with id: " +userId +" has verified the email and "+freeTokens +" tokens added to the user");
             userRepository.save(user);
             return true;
         }
@@ -134,6 +143,7 @@ public class UserService implements IService<User> {
      */
     public boolean addTokenAsPaypalAmount(int tokens, int userId){
 
+        logger.debug("adding tokens: " +tokens +" to the user with userId: " +userId);
         User user = getById(userId);
         if(tokens > 0 && user != null) {
             int oldTokens = user.getTokens();

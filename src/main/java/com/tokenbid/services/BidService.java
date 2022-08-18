@@ -2,12 +2,15 @@ package com.tokenbid.services;
 
 import java.util.List;
 
+import com.tokenbid.controllers.AuctionController;
 import com.tokenbid.models.Auction;
 import com.tokenbid.models.Item;
 import com.tokenbid.models.User;
 import com.tokenbid.repositories.AuctionRepository;
 import com.tokenbid.repositories.ItemRepository;
 import com.tokenbid.repositories.UserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,8 @@ public class BidService implements IService<Bid> {
     private AuctionRepository auctionRepository;
     private ItemRepository itemRepository;
     private UserRepository userRepository;
+
+    private static Logger logger = LogManager.getLogger(AuctionController.class.getName());
 
     @Autowired
     public BidService(BidRepository bidRepository, AuctionRepository auctionRepository, ItemRepository itemRepository, UserRepository userRepository) {
@@ -39,6 +44,7 @@ public class BidService implements IService<Bid> {
      */
     @Override
     public int add(Bid newBid) throws IllegalArgumentException {
+        logger.debug("Attempting to add a new bid");
         Auction auction = null;
         Item item = null;
         User newBidUser = null;
@@ -90,7 +96,7 @@ public class BidService implements IService<Bid> {
         // Remove tokens from user submitting the new bid
         newBid.setOutbid(true);
         newBidUser.setTokens(newBidUser.getTokens() - newBid.getBid());
-
+        logger.debug("New Bid added for the item: " +item.getItemId());
         return bidRepository.save(newBid).getBidId();
     }
 
@@ -118,7 +124,6 @@ public class BidService implements IService<Bid> {
         if (bidRepository.findById(id).isPresent()) {
             return bidRepository.findById(id).get();
         }
-
         return null;
     }
 
@@ -133,6 +138,7 @@ public class BidService implements IService<Bid> {
      * @return Bid object with the highest Bid
      */
     public Bid getHighestBidForAnAuction(int auctionID){
+        logger.debug("Getting the highest bid for auction: " +auctionID);
         return bidRepository.getHighestBidForAnAuction(auctionID);
     }
 }
