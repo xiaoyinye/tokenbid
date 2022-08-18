@@ -4,6 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ import com.tokenbid.services.UserService;
 @RequestMapping("/users")
 public class UserController implements IController<User> {
     private UserService userService;
-
+    private static Logger logger = LogManager.getLogger(AuctionController.class.getName());
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
@@ -33,6 +35,7 @@ public class UserController implements IController<User> {
     @PostMapping(path = "/add", consumes = "application/json")
     public ResponseEntity<String> add(@RequestBody User user) throws URISyntaxException {
         try {
+            logger.debug("added a new user");
             return ResponseEntity.created(new URI("/users/" + userService.add(user))).build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -43,6 +46,7 @@ public class UserController implements IController<User> {
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<String> update(@PathVariable("id") int id, @RequestBody User updatedUser) {
         if (userService.getById(id) != null && userService.getById(id).isEmailVerified()) {
+            logger.debug("Updating user with user iD: " +id);
             userService.update(updatedUser);
             return ResponseEntity.noContent().build();
         }
@@ -53,6 +57,7 @@ public class UserController implements IController<User> {
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
         if (userService.getById(id) != null) {
+            logger.debug("Deleting a user with userID:" +id);
             userService.delete(id);
             return ResponseEntity.noContent().build();
         }
@@ -87,6 +92,7 @@ public class UserController implements IController<User> {
     public ResponseEntity<String> verifyUser(@PathVariable("id") int userId) {
         if (userService.getById(userId) != null &&
                 userService.verifyUserAndAddFreeTokens(userId)) {
+            logger.debug("User verified the Email");
             String message = "Your email has been verified. Enjoy 250 free tokens :)";
             return ResponseEntity.ok(message);
         }
@@ -102,6 +108,7 @@ public class UserController implements IController<User> {
     @PostMapping(path = "/login", consumes = "application/json")
     public ResponseEntity<User> login(@RequestBody User user) {
         User foundUser = userService.getByUsername(user.getUsername());
+        logger.debug("User with user ID: " +user.getUserId() +" attempting to Login");
         if (foundUser != null && foundUser.getPassword().equals(user.getPassword())) {
             return foundUser.isEmailVerified() ?
                     ResponseEntity.ok(foundUser) :
@@ -122,6 +129,7 @@ public class UserController implements IController<User> {
 
         if (userService.getById(userId) != null) {
             if (userService.addTokenAsPaypalAmount(tokens, userId)) {
+                logger.debug("Tokens: "+tokens +" added to the user with user ID: "+userId);
                 return ResponseEntity.ok("Tokens added to the user with user ID: " + userId);
             }
             return ResponseEntity.status(HttpStatus.CONFLICT)

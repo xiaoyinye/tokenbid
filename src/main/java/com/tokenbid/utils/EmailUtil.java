@@ -1,5 +1,6 @@
 package com.tokenbid.utils;
 
+import com.tokenbid.controllers.AuctionController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,20 @@ public class EmailUtil {
     private static final Logger log = LogManager.getLogger(EmailUtil.class);
     private static final String from = "noreply@tokenbid.com";
 
+    private static Logger logger = LogManager.getLogger(AuctionController.class.getName());
+
     @Autowired
     JavaMailSender emailSender;
 
+    /**
+     * Sending email to the user
+     * @param to emailId Of receiver
+     * @param subject subject of email
+     * @param body body of email
+     */
     public void sendEmail(String to, String subject, String body) {
         try {
+            logger.debug("Sending email");
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(from);
             message.setTo(to);
@@ -37,8 +47,15 @@ public class EmailUtil {
         }
     }
 
+    /**
+     * Sending email to the user
+     * @param to emailId Of receiver
+     * @param subject subject of email
+     * @param body body of email
+     */
     public void sendHTMLEmail(String to, String subject, String body) {
         try {
+            logger.debug("Sending HTML Email");
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper;
             helper = new MimeMessageHelper(message, true);

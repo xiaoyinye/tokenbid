@@ -4,6 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +25,8 @@ import com.tokenbid.services.AuctionService;
 public class AuctionController implements IController<Auction> {
     private AuctionService auctionService;
 
+    private static Logger logger = LogManager.getLogger(AuctionController.class.getName());
+
     @Autowired
     public AuctionController(AuctionService auctionService) {
         this.auctionService = auctionService;
@@ -37,23 +41,23 @@ public class AuctionController implements IController<Auction> {
     @Override
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<String> update(@PathVariable("id") int id, @RequestBody Auction updatedAuction) {
+        logger.debug("updating an auction with auction Id: "+id);
         if (auctionService.getById(id) != null) {
             updatedAuction.setAuctionId(id);
             auctionService.update(updatedAuction);
             return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.notFound().build();
     }
 
     @Override
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
+        logger.debug("Deleting the auction with auctionID: " +id);
         if (auctionService.getById(id) != null) {
             auctionService.delete(id);
             return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.notFound().build();
     }
 
@@ -74,7 +78,13 @@ public class AuctionController implements IController<Auction> {
         return ResponseEntity.ok(auctionService.getAll());
     }
 
+    /**
+     * To get active auctions from the database
+     * @return List of active auctions
+     */
     @GetMapping(path = "/active", produces = "application/json")
-    public ResponseEntity<List<Auction>> getActive() { return ResponseEntity.ok(auctionService.getActive()); }
+    public ResponseEntity<List<Auction>> getActive() {
+        logger.debug("Retrieving list of active auctions ");
+        return ResponseEntity.ok(auctionService.getActive()); }
 
 }

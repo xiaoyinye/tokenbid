@@ -26,7 +26,7 @@ public interface IController<T> {
     /**
      * Deletes an item from the database.
      * 
-     * @param item The item to be deleted.
+     * @param id of The item to be deleted.
      */
     ResponseEntity<String> delete(int id);
 
