@@ -68,7 +68,7 @@ public class AuctionService implements IService<Auction> {
      * @param buyer  User buying the item
      * @param seller User selling the item
      */
-    private void processSale(Item item, Bid bid, User buyer, User seller) {
+    protected void processSale(Item item, Bid bid, User buyer, User seller) {
         // transfer item ownership
         item.setUserId(buyer.getUserId());
         itemService.update(item);
