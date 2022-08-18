@@ -23,19 +23,19 @@ public class EmailUtil {
     @Autowired
     JavaMailSender emailSender;
 
-//    public void sendEmail(String to, String subject, String body) {
-//        try {
-//            SimpleMailMessage message = new SimpleMailMessage();
-//            message.setFrom(from);
-//            message.setTo(to);
-//            message.setSubject(subject);
-//            message.setText(body);
-//            emailSender.send(message);
-//        } catch (MailException e) {
-//            log.error("Failed to send email");
-//            e.printStackTrace();
-//        }
-//    }
+    public void sendEmail(String to, String subject, String body) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(from);
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(body);
+            emailSender.send(message);
+        } catch (MailException e) {
+            log.error("Failed to send email");
+            e.printStackTrace();
+        }
+    }
 
     public void sendHTMLEmail(String to, String subject, String body) {
         try {
