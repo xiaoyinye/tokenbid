@@ -67,8 +67,8 @@ async function getAllActiveAuctions() {
   return response.json();
 }
 
-async function getHighestBid(itemId) {
-  const response = await sendRequest('GET', 'highest-bid/' + itemId);
+async function getHighestBid(auctionId) {
+  const response = await sendRequest('GET', '/bids/highest-bid/' + auctionId);
   if (!response.ok) return null;
   return response.json();
 }
