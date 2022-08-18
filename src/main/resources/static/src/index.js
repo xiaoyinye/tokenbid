@@ -238,6 +238,8 @@ if (bidForm) {
     let response = await addBid(bid);
     if (response.ok) {
       alert('Bid added!');
+      let currentBidEle = document.getElementById('current-bid');
+      if (currentBidEle) currentBidEle.textContent = 'Current Bid: ' + bid.bid + ' tokens';
     } else if (response.status === 409) {
       let body = await response.text();
       alert(body);
@@ -349,6 +351,7 @@ async function displayAuctionDetails(auctionId, detailContainer) {
 
   let currentBidEle = document.createElement('div');
   currentBidEle.classList.add('desc');
+  currentBidEle.id = 'current-bid';
   let bid = highestBid ? highestBid.bid : auction.startingBid;
   currentBidEle.textContent = 'Current Bid: ' + bid + ' tokens';
   detailContainer.appendChild(currentBidEle);
