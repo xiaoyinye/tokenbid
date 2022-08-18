@@ -1070,39 +1070,29 @@ div.desc {
   text-align: center;
 }
 
-.button-1 {
-  padding: 0.2em 0.8em;
-  border: 2px solid skyblue;
-  position: relative;
+.lout {
+  float: right;
   overflow: hidden;
-  background-color: transparent;
+  border: 2px solid black;
+  border-radius: 5px;
+  border-style: outset;
+  background-color: #73bbff;
+  font-family: "Fira Sans", sans-serif;
+}
+
+/* Navbar links */
+.lout a {
+  float: right;
+  color: black;
   text-align: center;
-  text-transform: uppercase;
-  font-size: 16px;
-  transition: 0.3s;
-  z-index: 1;
-  font-family: inherit;
-  color: skyblue;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  transition: 0.4s;
+  cursor: pointer;
 }
 
-.button-1::before {
-  content: "";
-  width: 0;
-  height: 300%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-  background: skyblue;
-  transition: 0.5s ease;
-  display: block;
-  z-index: -1;
-}
-
-.button-1:hover::before {
-  width: 105%;
-}
-
-.button-1:hover {
-  color: #111;
+.lout a:hover {
+  background-color: #307fc9;
+  color: white;
 }

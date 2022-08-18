@@ -11,6 +11,9 @@
     <a href="action.html">Add Auction | Item</a>
     <a href="profile.html">Profile</a>
   </div>
+  <div class="lout">
+    <a id="logout">Log Out</a>
+  </div>
 
   <body>
     <section class="ftco-section">
@@ -32,15 +35,28 @@
             <div class="wrapper">
               <div class="row no-gutters">
                 <div class="col-md-6 d-flex align-items-stretch">
-                  <div id="profile-container" class="contact-wrap w-100 p-md-5 p-4 py-5">
+                  <div
+                    id="profile-container"
+                    class="contact-wrap w-100 p-md-5 p-4 py-5"
+                  >
                     <h3 class="mb-4">Your Current Info:</h3>
                     <div id="form-message-warning" class="mb-4"></div>
 
-                    <p style="color: white">First Name: <span id="profile-first-name"></span></p>
-                    <p style="color: white">Last Name: <span id="profile-last-name"></span></p>
-                    <p style="color: white">Email: <span id="profile-email"></span></p>
-                    <p style="color: white">Username: <span id="profile-username"></span></p>
-                    <p style="color: white">Current tokens: <span id="profile-tokens"></span></p>
+                    <p style="color: white">
+                      First Name: <span id="profile-first-name"></span>
+                    </p>
+                    <p style="color: white">
+                      Last Name: <span id="profile-last-name"></span>
+                    </p>
+                    <p style="color: white">
+                      Email: <span id="profile-email"></span>
+                    </p>
+                    <p style="color: white">
+                      Username: <span id="profile-username"></span>
+                    </p>
+                    <p style="color: white">
+                      Current tokens: <span id="profile-tokens"></span>
+                    </p>
 
                     <div style="padding: 5%"></div>
                     <button onclick="showProfileForm();" class="button-19">
@@ -76,6 +92,6 @@
 
 <script>
   function showProfileForm() {
-    document.getElementById('profile-form').style.display = 'block';
+    document.getElementById("profile-form").style.display = "block";
   }
 </script>
