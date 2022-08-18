@@ -382,13 +382,17 @@ function startCountdownTimer(endTime, display) {
   let start = Date.now();
   let end = Date.parse(endTime);
   let duration = Math.floor((end - start) / 1000);
-  if (!endTime || duration < 0) {
+  if (!duration || duration < 0) {
     display.textContent = "00:00:00";
     return;
   }
-  let diff, hours, minutes, seconds;
+  let diff, hours, minutes, seconds, intervalId;
   function timer() {
     diff = duration - Math.floor(((Date.now() - start) / 1000));  // in seconds
+    if (diff < 0) { // timer has ended
+      clearInterval(intervalId);
+      return;
+    }
     hours = Math.floor(diff / 3600);
     seconds = diff - hours*3600;
     minutes = Math.floor(seconds / 60);
@@ -399,7 +403,7 @@ function startCountdownTimer(endTime, display) {
     display.textContent = hours + ":" + minutes + ":" + seconds;
   };
   timer();  // display immediately
-  setInterval(timer, 1000);
+  intervalId = setInterval(timer, 1000);
 }
 
 /*
