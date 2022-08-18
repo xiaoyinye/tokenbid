@@ -41,32 +41,41 @@ public class BidService implements IService<Bid> {
     public int add(Bid newBid) throws IllegalArgumentException {
         Auction auction = null;
         Item item = null;
+        User newBidUser = null;
         if (auctionRepository.findById(newBid.getAuctionId()).isPresent())
             auction = auctionRepository.findById(newBid.getAuctionId()).get();
         else throw new IllegalArgumentException("Auction not found");
         if (itemRepository.findById(auction.getItemId()).isPresent())
             item = itemRepository.findById(auction.getItemId()).get();
         else throw new IllegalArgumentException("Item not found");
+        if (userRepository.findById(newBid.getUserId()).isPresent())
+            newBidUser = userRepository.findById(newBid.getUserId()).get();
+        else throw new IllegalArgumentException("User not found");
 
         int startingBid = auction.getStartingBid();
         Bid currentHighest = getHighestBidForAnAuction(newBid.getAuctionId());
-        int ownerUserId = item.getUserId();
-        User newBidUser = null;
-        if (userRepository.findById(newBid.getUserId()).isPresent())
-            newBidUser = userRepository.findById(newBid.getUserId()).get();
 
-        if (newBid.getUserId() == ownerUserId)
+        // Check that the user is not bidding on their own item
+        if (newBid.getUserId() == item.getUserId())
             throw new IllegalArgumentException("User cannot bid on their own item");
-        if (newBidUser == null || newBid.getBid() > newBidUser.getTokens())
-            throw new IllegalArgumentException("User does not have enough tokens");
-        if (newBid.getBid() < startingBid)
-            throw new IllegalArgumentException("Bid must be higher than the starting bid of " + startingBid + " tokens");
-        if (currentHighest != null && newBid.getBid() <= currentHighest.getBid())
-            throw new IllegalArgumentException("Bid must be higher than the current highest bid of " + currentHighest.getBid() + " tokens");
 
-        // Remove tokens from user submitting the new bid
-        newBid.setOutbid(true);
-        newBidUser.setTokens(newBidUser.getTokens() - newBid.getBid());
+        // Check that the bid is higher than the current highest bid
+        if (currentHighest != null) {
+            if (newBid.getBid() <= currentHighest.getBid())
+                throw new IllegalArgumentException("Bid must be higher than the current highest bid of " + currentHighest.getBid() + " tokens");
+        } else if (newBid.getBid() < startingBid)
+            throw new IllegalArgumentException("Bid must be higher than the starting bid of " + startingBid + " tokens");
+
+        // Check that the user has enough tokens
+        if (currentHighest != null && newBidUser.getUserId() == currentHighest.getUserId()) {
+            // new bid is placed by the same user who placed the previous highest bid
+            if (newBid.getBid() > (currentHighest.getBid() + newBidUser.getTokens()))
+                throw new IllegalArgumentException("User does not have enough tokens");
+        } else {
+            // new bid is placed by a different user from the previous highest bid
+            if (newBid.getBid() > newBidUser.getTokens())
+                throw new IllegalArgumentException("User does not have enough tokens");
+        }
 
         // Add back tokens to user with the previous highest bid
         if (currentHighest != null) {
@@ -77,6 +86,10 @@ public class BidService implements IService<Bid> {
                 prevUser.setTokens(prevUser.getTokens() + currentHighest.getBid());
             }
         }
+
+        // Remove tokens from user submitting the new bid
+        newBid.setOutbid(true);
+        newBidUser.setTokens(newBidUser.getTokens() - newBid.getBid());
 
         return bidRepository.save(newBid).getBidId();
     }
