@@ -379,16 +379,16 @@ async function populateAuctionsContainer(auctionsContainer) {
   Start a countdown timer on the display element with a specified end time
 */
 function startCountdownTimer(endTime, display) {
-  let startTime = Date.now();
+  let start = Date.now();
   let end = Date.parse(endTime);
-  let duration = Math.floor((end - startTime) / 1000);
+  let duration = Math.floor((end - start) / 1000);
   if (!endTime || duration < 0) {
     display.textContent = "00:00:00";
     return;
   }
   let diff, hours, minutes, seconds;
   function timer() {
-    diff = duration - Math.floor(((Date.now() - startTime) / 1000));  // in seconds
+    diff = duration - Math.floor(((Date.now() - start) / 1000));  // in seconds
     hours = Math.floor(diff / 3600);
     seconds = diff - hours*3600;
     minutes = Math.floor(seconds / 60);
