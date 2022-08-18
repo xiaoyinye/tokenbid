@@ -5,6 +5,7 @@ import java.util.List;
 import com.tokenbid.models.Bid;
 import com.tokenbid.models.Item;
 import com.tokenbid.models.User;
+import com.tokenbid.utils.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +15,16 @@ import com.tokenbid.repositories.AuctionRepository;
 @Service
 public class AuctionService implements IService<Auction> {
     private AuctionRepository auctionRepository;
-    private EmailService emailService;
+    private EmailUtil emailUtil;
     private ItemService itemService;
     private BidService bidService;
     private UserService userService;
 
     @Autowired
-    public AuctionService(AuctionRepository auctionRepository, EmailService emailService, ItemService itemService,
-            BidService bidService, UserService userService) {
+    public AuctionService(AuctionRepository auctionRepository, EmailUtil emailUtil, ItemService itemService,
+                          BidService bidService, UserService userService) {
         this.auctionRepository = auctionRepository;
-        this.emailService = emailService;
+        this.emailUtil = emailUtil;
         this.itemService = itemService;
         this.bidService = bidService;
         this.userService = userService;
@@ -150,8 +151,8 @@ public class AuctionService implements IService<Auction> {
                 + winningBid.getBid() + " tokens.</p>" +
                 "</div>" +
                 "</div>";
-        emailService.sendHTMLEmail(seller.getEmail(), "Auction Ended", soldBody);
-        emailService.sendHTMLEmail(buyer.getEmail(), "Auction Ended", boughtBody);
+        emailUtil.sendHTMLEmail(seller.getEmail(), "Auction Ended", soldBody);
+        emailUtil.sendHTMLEmail(buyer.getEmail(), "Auction Ended", boughtBody);
     }
 
     /**
@@ -173,7 +174,7 @@ public class AuctionService implements IService<Auction> {
                 + "' has ended with no successful bids.</p>" +
                 "</div>" +
                 "</div>";
-        emailService.sendHTMLEmail(seller.getEmail(), "Auction Ended", notSoldBody);
+        emailUtil.sendHTMLEmail(seller.getEmail(), "Auction Ended", notSoldBody);
     }
 
     /**
@@ -193,6 +194,6 @@ public class AuctionService implements IService<Auction> {
                 "<p style=\"margin-top: 1.5em\">Your auction for item '" + item.getTitle()
                 + "' was successful cancelled.</p>" +
                 "</div>";
-        emailService.sendHTMLEmail(seller.getEmail(), "Auction Ended", cancelledBody);
+        emailUtil.sendHTMLEmail(seller.getEmail(), "Auction Ended", cancelledBody);
     }
 }

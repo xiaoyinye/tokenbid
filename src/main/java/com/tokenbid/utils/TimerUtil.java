@@ -1,7 +1,9 @@
-package com.tokenbid.services;
+package com.tokenbid.utils;
 
 import com.tokenbid.models.Auction;
 import com.tokenbid.models.Bid;
+import com.tokenbid.services.AuctionService;
+import com.tokenbid.services.BidService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -12,7 +14,7 @@ import java.time.Instant;
 import java.util.*;
 
 @Component
-public class TimerService {
+public class TimerUtil {
     private final List<Auction> endingAuctions = new ArrayList<>();
     private final Timer databaseTimer = new Timer("DatabaseTimer");
     private final Timer auctionTimer = new Timer("AuctionTimer");
@@ -25,7 +27,7 @@ public class TimerService {
     @Autowired
     private BidService bidService;
 
-    private TimerService() { }
+    private TimerUtil() { }
 
     @EventListener(ApplicationReadyEvent.class)
     public void startTimer(ApplicationReadyEvent event) {
