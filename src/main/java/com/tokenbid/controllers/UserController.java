@@ -93,15 +93,21 @@ public class UserController implements IController<User> {
         return ResponseEntity.notFound().build();
     }
 
+    /**
+     * Performs a user login request
+     *
+     * @param user User credentials supplied
+     * @return User if credentials match and email is verified, Status code 409 if credentials match but email is not verified, or Status code 401 if credentials do not match
+     */
     @PostMapping(path = "/login", consumes = "application/json")
     public ResponseEntity<User> login(@RequestBody User user) {
         User foundUser = userService.getByUsername(user.getUsername());
-        if (foundUser != null && foundUser.getPassword().equals(user.getPassword())
-                && foundUser.isEmailVerified()) {
-            return ResponseEntity.ok(foundUser);
+        if (foundUser != null && foundUser.getPassword().equals(user.getPassword())) {
+            return foundUser.isEmailVerified() ?
+                    ResponseEntity.ok(foundUser) :
+                    ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     /**
