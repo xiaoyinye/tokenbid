@@ -51,16 +51,6 @@ async function getAuction(auctionId) {
   return response.json();
 }
 
-async function getBid(bidId) {
-  const response = await sendRequest('GET', '/bids/' + bidId);
-  if (!response.ok) return null;
-  return response.json();
-}
-
-async function getItemsByCategory(category) {
-  // TODO add endpoint to query by category
-}
-
 async function getAllActiveAuctions() {
   const response = await sendRequest('GET', '/auctions/active');
   if (!response.ok) return null;
@@ -69,12 +59,6 @@ async function getAllActiveAuctions() {
 
 async function getHighestBid(auctionId) {
   const response = await sendRequest('GET', '/bids/highest-bid/' + auctionId);
-  if (!response.ok) return null;
-  return response.json();
-}
-
-async function getAllItems() {
-  const response = await sendRequest('GET', '/items/all');
   if (!response.ok) return null;
   return response.json();
 }
@@ -95,18 +79,6 @@ async function addTokens(userId, tokens) {
   return await sendRequest('PUT', '/users/' + userId + '/add-token', tokens);
 }
 
-async function updateItem(item) {
-  return await sendRequest('PUT', '/items/' + item.itemId, item);
-}
-
-async function updateAuction(auction) {
-  return await sendRequest('PUT', '/auctions/' + auction.auctionId, auction);
-}
-
-async function updateBid(bid) {
-  return await sendRequest('PUT', '/bids/' + bid.bidId, bid);
-}
-
 module.exports = {
   addUser,
   loginUser,
@@ -116,15 +88,9 @@ module.exports = {
   getUser,
   getItem,
   getAuction,
-  getBid,
-  getItemsByCategory,
-  getAllItems,
   getAllAvailableItemsForUser,
   getAllActiveAuctions,
   getHighestBid,
   updateUser,
   addTokens,
-  updateItem,
-  updateAuction,
-  updateBid,
 };

@@ -8,17 +8,11 @@ const addBid = fetchRequests.addBid;
 const getUser = fetchRequests.getUser;
 const getItem = fetchRequests.getItem;
 const getAuction = fetchRequests.getAuction;
-const getBid = fetchRequests.getBid;
-const getItemsByCategory = fetchRequests.getItemsByCategory;
-const getAllItems = fetchRequests.getAllItems;
 const getAllAvailableItemsForUser = fetchRequests.getAllAvailableItemsForUser;
 const getAllActiveAuctions = fetchRequests.getAllActiveAuctions;
 const getHighestBid = fetchRequests.getHighestBid;
 const updateUser = fetchRequests.updateUser;
 const addTokens = fetchRequests.addTokens;
-const updateItem = fetchRequests.updateItem;
-const updateAuction = fetchRequests.updateAuction;
-const updateBid = fetchRequests.updateBid;
 
 /////////////////////////////////////////////////////////////////////////////
 // Event listeners, TODO change names when forms are added, add input validation
