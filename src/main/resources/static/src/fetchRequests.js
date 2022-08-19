@@ -91,6 +91,10 @@ async function updateUser(user) {
   return await sendRequest('PUT', '/users/' + user.userId, user);
 }
 
+async function addTokens(userId, tokens) {
+  return await sendRequest('PUT', '/users/' + userId + '/add-token', tokens);
+}
+
 async function updateItem(item) {
   return await sendRequest('PUT', '/items/' + item.itemId, item);
 }
@@ -119,6 +123,7 @@ module.exports = {
   getAllActiveAuctions,
   getHighestBid,
   updateUser,
+  addTokens,
   updateItem,
   updateAuction,
   updateBid,

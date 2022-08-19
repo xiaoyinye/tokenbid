@@ -6,6 +6,13 @@
     <link href="css/style.css" rel="stylesheet" type="text/css" />
   </head>
 
+  <script>
+    const userId = sessionStorage.getItem('userId');
+    if (userId !== null) {
+      window.location.href = '/explore.html';
+    }
+  </script>
+
   <body>
     <section class="ftco-section">
       <div class="container">

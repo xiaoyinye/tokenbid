@@ -6,11 +6,20 @@
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <script src="./dist/app.js" defer></script>
   </head>
+
+  <script>
+    const userId = sessionStorage.getItem('userId');
+    if (userId === null) {
+      window.location.href = '/login.html';
+    }
+  </script>
+
   <div class="nav">
     <a href="explore.html">Explore</a>
     <a href="action.html">Add Auction | Item</a>
     <a href="profile.html">Profile</a>
   </div>
+
   <div class="lout">
     <a id="logout">Log Out</a>
   </div>
@@ -60,17 +69,7 @@
                       id="item-detail-container"
                       class="gallery"
                       style="margin-left: 25%"
-                    >
-                      <!-- <img
-                        src="assets/lotus.png"
-                        alt="Forest"
-                        width="400"
-                        height="400"
-                      />
-
-                      <div class="desc">Very Rare Lotus</div>
-                      <div class="desc">Current Bid: $5,000,000</div> -->
-                    </div>
+                    ></div>
                   </div>
                 </div>
               </div>

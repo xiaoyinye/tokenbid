@@ -6,6 +6,14 @@
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <script src="./dist/app.js" defer></script>
   </head>
+
+  <script>
+    const userId = sessionStorage.getItem('userId');
+    if (userId !== null) {
+      window.location.href = '/explore.html';
+    }
+  </script>
+
   <body style="margin-bottom: 5%">
     <div class="nav">
       <a href="/">Home</a>

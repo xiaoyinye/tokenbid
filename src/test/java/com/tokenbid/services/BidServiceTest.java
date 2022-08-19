@@ -1,4 +1,5 @@
 package com.tokenbid.services;
+
 import com.tokenbid.models.Auction;
 import com.tokenbid.models.Bid;
 import com.tokenbid.models.Item;
@@ -17,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 
-
 class BidServiceTest {
     private BidRepository bidRepository = Mockito.mock(BidRepository.class);
     private AuctionRepository auctionRepository = Mockito.mock(AuctionRepository.class);
@@ -29,6 +29,7 @@ class BidServiceTest {
     public void initBefore() {
         bidService = new BidService(bidRepository, auctionRepository, itemRepository, userRepository);
     }
+
     private Bid createBid() {
         Bid bid = new Bid();
         bid.setBidId(1);
@@ -112,7 +113,8 @@ class BidServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             bidService.add(newBid);
         });
-        assertTrue(exception.getMessage().contains("Bid must be higher than the current highest bid of " + currentHighest.getBid() + " tokens"));
+        assertTrue(exception.getMessage()
+                .contains("Bid must be higher than the current highest bid of " + currentHighest.getBid() + " tokens"));
     }
 
     @Test
@@ -202,8 +204,6 @@ class BidServiceTest {
         Assertions.assertEquals(1, actual);
     }
 
-
-
     @Test
     public void shouldUpdateBid() {
         Bid bid = createBid();
@@ -252,7 +252,6 @@ class BidServiceTest {
 
     @Test
     public void shouldGetHighestBidForAnAuction() {
-        int auctionId = 1;
         bidService.getHighestBidForAnAuction(1);
         verify(bidRepository).getHighestBidForAnAuction(1);
     }
