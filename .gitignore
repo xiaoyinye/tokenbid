@@ -39,3 +39,4 @@ build/
 node_modules/
 src/main/resources/static/src/config.js
 src/main/resources/static/dist
+buildspec.yaml

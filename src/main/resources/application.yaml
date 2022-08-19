@@ -2,9 +2,9 @@ server:
   port: 5000
 spring:
   datasource:
-    username: postgres
-    password: 1121Revature
-    url: jdbc:postgresql://revature-db.cn6l9mwmtabj.us-east-1.rds.amazonaws.com:5432/tokenbid
+    username: jianglin1997
+    password: Jl3467666
+    url: jdbc:postgresql://revature-java-project.cdat3vncn69a.us-east-1.rds.amazonaws.com:5432/tokenbid
     driver-class-name: org.postgresql.Driver
   mail:
     host: smtp.gmail.com
