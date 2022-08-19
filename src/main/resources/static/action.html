@@ -6,6 +6,14 @@
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <script src="./dist/app.js" defer></script>
   </head>
+
+  <script>
+    const userId = sessionStorage.getItem('userId');
+    if (userId === null) {
+      window.location.href = '/login.html';
+    }
+  </script>
+
   <div class="nav">
     <a href="explore.html">Explore</a>
     <a href="action.html">Add Auction | Item</a>
@@ -58,14 +66,12 @@
                         Start Auction
                       </p>
                       <p style="color: white; margin: 0">Item</p>
-                      <select name="itemId" id="auction-form-items">
-                        <!-- <option>Hat</option>
-                        <option>Cat</option>
-                        <option>Dog</option> -->
-                      </select>
+                      <select name="itemId" id="auction-form-items"></select>
                       <p style="color: white; margin: 0">Starting Bid</p>
                       <input name="startingBid" type="number" min="0" />
-                      <p style="color: white; margin: 0">Auction Length (hours)</p>
+                      <p style="color: white; margin: 0">
+                        Auction Length (hours)
+                      </p>
                       <input name="length" type="number" min="0" />
                       <button type="submit">Submit</button>
                     </form>
@@ -123,14 +129,14 @@
 
 <script>
   function showItemForm() {
-    document.getElementById("item-form").style.display = "block";
-    document.getElementById("auction-form").style.display = "none";
+    document.getElementById('item-form').style.display = 'block';
+    document.getElementById('auction-form').style.display = 'none';
   }
 </script>
 
 <script>
   function showAuctionForm() {
-    document.getElementById("auction-form").style.display = "block";
-    document.getElementById("item-form").style.display = "none";
+    document.getElementById('auction-form').style.display = 'block';
+    document.getElementById('item-form').style.display = 'none';
   }
 </script>

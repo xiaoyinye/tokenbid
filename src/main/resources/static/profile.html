@@ -6,11 +6,20 @@
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <script src="./dist/app.js" defer></script>
   </head>
+
+  <script>
+    const userId = sessionStorage.getItem('userId');
+    if (userId === null) {
+      window.location.href = '/login.html';
+    }
+  </script>
+
   <div class="nav">
     <a href="explore.html">Explore</a>
     <a href="action.html">Add Auction | Item</a>
     <a href="profile.html">Profile</a>
   </div>
+
   <div class="lout">
     <a id="logout">Log Out</a>
   </div>
@@ -92,6 +101,6 @@
 
 <script>
   function showProfileForm() {
-    document.getElementById("profile-form").style.display = "block";
+    document.getElementById('profile-form').style.display = 'block';
   }
 </script>
