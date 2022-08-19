@@ -15,6 +15,7 @@ const getAllAvailableItemsForUser = fetchRequests.getAllAvailableItemsForUser;
 const getAllActiveAuctions = fetchRequests.getAllActiveAuctions;
 const getHighestBid = fetchRequests.getHighestBid;
 const updateUser = fetchRequests.updateUser;
+const addTokens = fetchRequests.addTokens;
 const updateItem = fetchRequests.updateItem;
 const updateAuction = fetchRequests.updateAuction;
 const updateBid = fetchRequests.updateBid;
@@ -262,6 +263,7 @@ if (bidForm) {
     let response = await addBid(bid);
     if (response.ok) {
       alert('Bid added!');
+      e.target.reset();
       let currentBidEle = document.getElementById('current-bid');
       if (currentBidEle)
         currentBidEle.textContent = 'Current Bid: ' + bid.bid + ' tokens';
@@ -451,6 +453,41 @@ async function displayProfileInformation(profileContainer) {
   if (emailEle) emailEle.textContent = user.email;
   if (usernameEle) usernameEle.textContent = user.username;
   if (tokensEle) tokensEle.textContent = user.tokens;
+
+  const amountEle = document.getElementById('amount');
+
+  paypal
+    .Buttons({
+      createOrder: function (data, actions) {
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                value: amountEle.value,
+              },
+            },
+          ],
+        });
+      },
+      onApprove: function (data, actions) {
+        return actions.order.capture().then(async function (details) {
+          const userId = window.sessionStorage.getItem('userId');
+          const response = await addTokens(userId, amountEle.value * 10);
+          if (response.ok) {
+            window.location.href = '/profile.html';
+          } else {
+            alert('Error adding tokens. Please try again.');
+          }
+        });
+      },
+      style: {
+        layout: 'horizontal',
+        shape: 'rect',
+        label: 'paypal',
+        tagline: false,
+      },
+    })
+    .render('#paypal-button');
 }
 
 /*

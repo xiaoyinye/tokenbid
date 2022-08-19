@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>TokenBid - Profile</title>
     <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="https://www.paypal.com/sdk/js?client-id=AdO7fVfJuuZDLPpiWIx1fFOXnkfF2PL2PeukDDZr3BZVJdiP6k4p1TRDH1sGAObzEGqiE0DO5emf4naC&components=buttons&disable-funding=credit"></script>
     <script src="./dist/app.js" defer></script>
   </head>
 
@@ -67,10 +68,19 @@
                       Current tokens: <span id="profile-tokens"></span>
                     </p>
 
-                    <div style="padding: 5%"></div>
-                    <button onclick="showProfileForm();" class="button-19">
-                      Update Info
-                    </button>
+                    <p style="color: white; margin: 0">
+                      Buy Tokens ($1 = 10 tokens):
+                    </p>
+                    <div>
+                      <span style="color: white">$ </span>
+                      <input
+                        type="number"
+                        id="amount"
+                        placeholder="10"
+                        min="1"
+                      />
+                    </div>
+                    <div id="paypal-button" style="margin-top: 1em"></div>
                   </div>
                 </div>
 
