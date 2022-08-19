@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>TokenBid - Profile</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="https://www.paypal.com/sdk/js?client-id=AdO7fVfJuuZDLPpiWIx1fFOXnkfF2PL2PeukDDZr3BZVJdiP6k4p1TRDH1sGAObzEGqiE0DO5emf4naC&components=buttons&disable-funding=credit"></script>
+    <script src="./dist/app.js" defer></script>
+  </head>
+
+  <script>
+    const userId = sessionStorage.getItem('userId');
+    if (userId === null) {
+      window.location.href = '/login.html';
+    }
+  </script>
+
+  <div class="nav">
+    <a href="explore.html">Explore</a>
+    <a href="action.html">Add Auction | Item</a>
+    <a href="profile.html">Profile</a>
+  </div>
+
+  <div class="lout">
+    <a id="logout">Log Out</a>
+  </div>
+
+  <body>
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <img
+              src="assets/enjoi.png"
+              alt="centered image"
+              height="150"
+              width="275"
+            />
+            <h4>Profile</h4>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <div class="wrapper">
+              <div class="row no-gutters">
+                <div class="col-md-6 d-flex align-items-stretch">
+                  <div
+                    id="profile-container"
+                    class="contact-wrap w-100 p-md-5 p-4 py-5"
+                  >
+                    <h3 class="mb-4">Your Current Info:</h3>
+                    <div id="form-message-warning" class="mb-4"></div>
+
+                    <p style="color: white">
+                      First Name: <span id="profile-first-name"></span>
+                    </p>
+                    <p style="color: white">
+                      Last Name: <span id="profile-last-name"></span>
+                    </p>
+                    <p style="color: white">
+                      Email: <span id="profile-email"></span>
+                    </p>
+                    <p style="color: white">
+                      Username: <span id="profile-username"></span>
+                    </p>
+                    <p style="color: white">
+                      Current tokens: <span id="profile-tokens"></span>
+                    </p>
+
+                    <p style="color: white; margin: 0">
+                      Buy Tokens ($1 = 10 tokens):
+                    </p>
+                    <div>
+                      <span style="color: white">$ </span>
+                      <input
+                        type="number"
+                        id="amount"
+                        placeholder="10"
+                        min="1"
+                      />
+                    </div>
+                    <div id="paypal-button" style="margin-top: 1em"></div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 d-flex align-items-stretch">
+                  <div class="info-wrap w-100 p-md-5 p-4 py-5 img">
+                    <form id="profile-form">
+                      <p class="mb-4" style="text-align: center">Update Info</p>
+                      <p style="color: white; margin: 0">First Name:</p>
+                      <input name="firstName" type="text" />
+                      <p style="color: white; margin: 0">Last Name:</p>
+                      <input name="lastName" type="text" />
+                      <p style="color: white; margin: 0">Password:</p>
+                      <input name="password" type="password" />
+                      <p style="color: white; margin: 0">Re-enter Password:</p>
+                      <input name="confirmPassword" type="password" />
+                      <button type="submit">Update</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
+
+<script>
+  function showProfileForm() {
+    document.getElementById('profile-form').style.display = 'block';
+  }
+</script>

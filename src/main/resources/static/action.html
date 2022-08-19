@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>TokenBid - Add Auction | Item</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="./dist/app.js" defer></script>
+  </head>
+
+  <script>
+    const userId = sessionStorage.getItem('userId');
+    if (userId === null) {
+      window.location.href = '/login.html';
+    }
+  </script>
+
+  <div class="nav">
+    <a href="explore.html">Explore</a>
+    <a href="action.html">Add Auction | Item</a>
+    <a href="profile.html">Profile</a>
+  </div>
+
+  <div class="lout">
+    <a id="logout">Log Out</a>
+  </div>
+
+  <body>
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <img
+              src="assets/enjoi.png"
+              alt="centered image"
+              height="150"
+              width="275"
+            />
+            <h4>Add Auction | Item</h4>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <div class="wrapper">
+              <div class="row no-gutters">
+                <div class="col-md-6 d-flex align-items-stretch">
+                  <div class="contact-wrap w-100 p-md-5 p-4 py-5">
+                    <h3 class="mb-4">Choose an action:</h3>
+                    <div id="form-message-warning" class="mb-4"></div>
+
+                    <button onclick="showItemForm();" class="button-19">
+                      New Item
+                    </button>
+                    <div style="padding: 5%"></div>
+                    <button onclick="showAuctionForm();" class="button-19">
+                      Start Auction
+                    </button>
+                    <div style="padding: 5%"></div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 d-flex align-items-stretch">
+                  <div class="info-wrap w-100 p-md-5 p-4 py-5 img">
+                    <form id="auction-form">
+                      <p class="mb-4" style="text-align: center">
+                        Start Auction
+                      </p>
+                      <p style="color: white; margin: 0">Item</p>
+                      <select name="itemId" id="auction-form-items"></select>
+                      <p style="color: white; margin: 0">Starting Bid</p>
+                      <input name="startingBid" type="number" min="1" />
+                      <p style="color: white; margin: 0">
+                        Auction Length (hours)
+                      </p>
+                      <input name="length" type="number" min="1" />
+                      <button type="submit">Submit</button>
+                    </form>
+
+                    <form id="item-form">
+                      <p class="mb-4" style="text-align: center">New Item</p>
+                      <p style="color: white; margin: 0">Title</p>
+                      <input name="title" type="text" placeholder="Title" />
+                      <p style="color: white; margin: 0">Description</p>
+                      <input
+                        name="description"
+                        type="text"
+                        placeholder="Description"
+                      />
+                      <p style="color: white; margin: 0">Category</p>
+                      <select name="category">
+                        <option>Antiques</option>
+                        <option>Apparel</option>
+                        <option>Art</option>
+                        <option>Automotive</option>
+                        <option>Books</option>
+                        <option>Business</option>
+                        <option>Crafts</option>
+                        <option>Collectible</option>
+                        <option>Computers</option>
+                        <option>Electronics</option>
+                        <option>Health & Beauty</option>
+                        <option>Hobbies</option>
+                        <option>Home & Garden</option>
+                        <option>Music</option>
+                        <option>Sporting Goods</option>
+                        <option>Travel</option>
+                        <option>Misc</option>
+                      </select>
+                      <p style="color: white; margin: 0">Image</p>
+                      <input
+                        id="image"
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        style="color: white"
+                      />
+                      <button type="submit">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
+
+<script>
+  function showItemForm() {
+    document.getElementById('item-form').style.display = 'block';
+    document.getElementById('auction-form').style.display = 'none';
+  }
+</script>
+
+<script>
+  function showAuctionForm() {
+    document.getElementById('auction-form').style.display = 'block';
+    document.getElementById('item-form').style.display = 'none';
+  }
+</script>

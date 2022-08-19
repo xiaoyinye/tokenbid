@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>TokenBid - Item</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="./dist/app.js" defer></script>
+  </head>
+
+  <script>
+    const userId = sessionStorage.getItem('userId');
+    if (userId === null) {
+      window.location.href = '/login.html';
+    }
+  </script>
+
+  <div class="nav">
+    <a href="explore.html">Explore</a>
+    <a href="action.html">Add Auction | Item</a>
+    <a href="profile.html">Profile</a>
+  </div>
+
+  <div class="lout">
+    <a id="logout">Log Out</a>
+  </div>
+
+  <body>
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <img
+              src="assets/enjoi.png"
+              alt="centered image"
+              height="150"
+              width="275"
+            />
+            <h4>Auction</h4>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <div class="wrapper">
+              <div class="row no-gutters">
+                <div class="col-md-6 d-flex align-items-stretch">
+                  <div class="contact-wrap w-100 p-md-5 p-4 py-5">
+                    <h3 class="mb-4">Auction Info</h3>
+
+                    <form id="bid-form" style="display: block">
+                      <p style="color: white; margin: 0">Bid Amount</p>
+                      <input
+                        name="bidAmount"
+                        style="margin-bottom: 1em"
+                        type="number"
+                        min="1"
+                      />
+                      <button type="submit" class="button-19">Set Bid</button>
+                    </form>
+                    <div style="padding: 5%"></div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 d-flex align-items-stretch">
+                  <div class="info-wrap w-100 p-md-5 p-4 py-5 img">
+                    <h3 style="text-align: center">Welcome to Token Bid</h3>
+
+                    <div
+                      id="item-detail-container"
+                      class="gallery"
+                      style="margin-left: 25%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

@@ -36,3 +36,6 @@ build/
 ### VS Code
 
 .vscode/
+node_modules/
+src/main/resources/static/src/config.js
+src/main/resources/static/dist

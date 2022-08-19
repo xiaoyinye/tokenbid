@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>TokenBid - Register</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="./dist/app.js" defer></script>
+  </head>
+
+  <script>
+    const userId = sessionStorage.getItem('userId');
+    if (userId !== null) {
+      window.location.href = '/explore.html';
+    }
+  </script>
+
+  <body style="margin-bottom: 5%">
+    <div class="nav">
+      <a href="/">Home</a>
+    </div>
+
+    <div></div>
+    <section class="ftco-section">
+      <div class="container">
+        <!-- Lines 9-15 build header -->
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <img
+              src="assets/enjoi.png"
+              alt="centered image"
+              height="150"
+              width="275"
+            />
+            <h4>Register</h4>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <div class="wrapper">
+              <div
+                class="card shadow-2-strong"
+                style="
+                  width: 100%;
+                  border-radius: 1rem;
+                  background-color: #272a34;
+                "
+              >
+                <div class="card-body p-5 text-center">
+                  <br />
+                  <form id="register-form">
+                    <p style="color: white; margin: 0">First Name</p>
+                    <div class="form-outline mb-4">
+                      <input
+                        name="firstName"
+                        type="text"
+                        required="required"
+                        class="form-control form-control-lg"
+                        placeholder="John"
+                        v-model="fname"
+                      />
+                    </div>
+                    <p style="color: white; margin: 0">Last Name</p>
+                    <div class="form-outline mb-4">
+                      <input
+                        name="lastName"
+                        type="text"
+                        required="required"
+                        class="form-control form-control-lg"
+                        placeholder="Doe"
+                        v-model="lname"
+                      />
+                    </div>
+                    <p style="color: white; margin: 0">Email</p>
+                    <div class="form-outline mb-4">
+                      <input
+                        name="email"
+                        type="email"
+                        required="required"
+                        class="form-control form-control-lg"
+                        placeholder="john.doe@email.com"
+                        v-model="email"
+                      />
+                    </div>
+                    <p style="color: white; margin: 0">Username</p>
+                    <div class="form-outline mb-4">
+                      <input
+                        name="username"
+                        type="text"
+                        required="required"
+                        class="form-control form-control-lg"
+                        placeholder="johndoe"
+                        v-model="username"
+                      />
+                    </div>
+                    <p style="color: white; margin: 0">Password</p>
+                    <div class="form-outline mb-4">
+                      <input
+                        name="password"
+                        type="password"
+                        required="required"
+                        class="form-control form-control-lg"
+                        placeholder="exceptions!"
+                        v-model="pass"
+                      />
+                    </div>
+                    <button class="button-19" style="width: 25%" type="submit">
+                      Register
+                    </button>
+                  </form>
+
+                  <p class="mb-0">
+                    Already have an account?
+                    <a href="login.html" class="mb-22 fw-bold">Login</a>
+                  </p>
+                  <br />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

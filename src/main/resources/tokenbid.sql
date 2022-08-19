@@ -5,7 +5,8 @@ create table if not exists users(
 	first_name varchar(50) not null,
 	last_name varchar(50) not null,
 	email varchar(100) not null unique,
-	tokens int DEFAULT 0 check(tokens >= 0)
+	tokens int default 0 check(tokens >= 0)
+	email_verified boolean default false
 );
 
 create table if not exists items(
@@ -14,6 +15,7 @@ create table if not exists items(
 	category varchar(50) not null,
 	title varchar(100) not null,
 	description text not null,
+	image_url text default 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png',
 	foreign key (user_id) references users(user_id)
 );
 
