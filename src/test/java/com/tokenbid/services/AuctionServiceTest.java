@@ -1,4 +1,5 @@
 package com.tokenbid.services;
+
 import com.tokenbid.models.Auction;
 import com.tokenbid.models.Bid;
 import com.tokenbid.models.Item;
@@ -28,9 +29,10 @@ class AuctionServiceTest {
         auction.setStatus("Not Sold");
         return auction;
     }
+
     @BeforeEach
     public void initBefore() {
-       auctionService = new AuctionService(auctionRepository, emailUtil, itemService, bidService, userService);
+        auctionService = new AuctionService(auctionRepository, emailUtil, itemService, bidService, userService);
     }
 
     @Test
@@ -41,35 +43,17 @@ class AuctionServiceTest {
         Assertions.assertEquals(auction.getAuctionId(), acutal);
     }
 
-//    @Test
-//    public void shouldUpdateSold() {
-//        Auction auction = new Auction();
-//        auction.setStatus("Sold");
-//        auction.setAuctionId(1);
-//        Item item = new Item();
-//        item.setItemId(1);
-//        User seller = new User();
-//        seller.setUserId(1);
-//        Bid winningBid = new Bid();
-//        winningBid.setUserId(2);
-//        User buyer = new User();
-//        Mockito.when(auctionRepository.findById(1)).thenReturn(Optional.of(auction));
-//        Mockito.when(itemService.getById(1)).thenReturn(item);
-//        Mockito.when(userService.getById(1)).thenReturn(seller);
-//        Mockito.when(bidService.getHighestBidForAnAuction(1)).thenReturn(winningBid);
-//        Mockito.when(userService.getById(2)).thenReturn(buyer);
-//    }
-
     @Test
     public void shouldProcessSale() {
         Item item = new Item();
         Bid bid = new Bid();
         User buyer = new User();
         User seller = new User();
-        auctionService.processSale(item,bid,buyer,seller);
+        auctionService.processSale(item, bid, buyer, seller);
         verify(itemService).update(item);
         verify(bidService).deleteForAuction(bid.getAuctionId());
     }
+
     @Test
     @DisplayName("should delete auction by id")
     public void shouldDeleteAuctionById() {
@@ -79,6 +63,7 @@ class AuctionServiceTest {
         verify(auctionRepository).findById(auction.getAuctionId());
         verify(auctionRepository).deleteById(auction.getAuctionId());
     }
+
     @Test
     @DisplayName("should retrieve auction by id")
     public void shouldFindAuctionById() {
@@ -104,8 +89,8 @@ class AuctionServiceTest {
 
     @Test
     public void shouldGetAuctionsEndingInOneHour() {
-        auctionService.getAuctionsEndingInOneHour();
-        verify(auctionRepository).findAuctionsEndingInNextHour();
+        auctionService.getAuctionsEndingInHalfAnHour();
+        verify(auctionRepository).findAuctionsEndingInNextHalfAnHour();
     }
 
     @Test
@@ -120,7 +105,7 @@ class AuctionServiceTest {
         User buyer = new User();
         Item item = new Item();
         Bid winningBid = new Bid();
-        auctionService.notifySold(seller,buyer,item,winningBid);
+        auctionService.notifySold(seller, buyer, item, winningBid);
         String soldBody = "<div style=\"background-color:#ad8; min-height: 300px\">" +
                 "<div style=\"font-family: Verdana,Arial,sans-serif; font-size: 24px; font-weight: bold; background-color: black; color: white; padding: 0.5em\">"
                 +

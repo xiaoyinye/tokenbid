@@ -21,15 +21,16 @@ public class TimerUtil {
     private final List<Auction> endingAuctions = new ArrayList<>();
     private final Timer databaseTimer = new Timer("DatabaseTimer");
     private final Timer auctionTimer = new Timer("AuctionTimer");
-    private static final long databaseTimerDelay = 10L * 1000L;     // 10sec
-    private static final long auctionTimerDelay = 1000L;            // 1sec
+    private static final long databaseTimerDelay = 10L * 1000L; // 10sec
+    private static final long auctionTimerDelay = 1000L; // 1sec
 
     private static Logger logger = LogManager.getLogger(AuctionController.class.getName());
     /**
      * Sending email to the user
-     * @param to emailId Of receiver
+     * 
+     * @param to      emailId Of receiver
      * @param subject subject of email
-     * @param body body of email
+     * @param body    body of email
      */
     @Autowired
     private AuctionService auctionService;
@@ -37,7 +38,8 @@ public class TimerUtil {
     @Autowired
     private BidService bidService;
 
-    private TimerUtil() { }
+    private TimerUtil() {
+    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void startTimer(ApplicationReadyEvent event) {
@@ -46,14 +48,15 @@ public class TimerUtil {
     }
 
     /**
-     * Query database every hour and add auctions ending in the upcoming hour to endingAuctions
+     * Query database every hour and add auctions ending in the upcoming hour to
+     * endingAuctions
      */
     private void startDatabaseTimer() {
         logger.debug("Scanning database to create list of upcoming auctions:");
         databaseTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                List<Auction> upcomingAuctions = auctionService.getAuctionsEndingInOneHour();
+                List<Auction> upcomingAuctions = auctionService.getAuctionsEndingInHalfAnHour();
                 for (Auction auction : upcomingAuctions) {
                     if (endingAuctions.stream().noneMatch(a -> a.getAuctionId() == auction.getAuctionId())) {
                         endingAuctions.add(auction);
@@ -74,7 +77,8 @@ public class TimerUtil {
                 ListIterator<Auction> itr = endingAuctions.listIterator();
                 while (itr.hasNext()) {
                     Auction auction = itr.next();
-                    if (auction.getStatus().equalsIgnoreCase("In Progress") && auction.getEndTime().before(Timestamp.from(Instant.now()))) {
+                    if (auction.getStatus().equalsIgnoreCase("In Progress")
+                            && auction.getEndTime().before(Timestamp.from(Instant.now()))) {
                         int startingBid = auction.getStartingBid();
                         Bid bid = bidService.getHighestBidForAnAuction(auction.getAuctionId());
                         if (bid != null && bid.getBid() >= startingBid)
@@ -86,6 +90,6 @@ public class TimerUtil {
                     }
                 }
             }
-        }, auctionTimerDelay/2, auctionTimerDelay);
+        }, auctionTimerDelay / 2, auctionTimerDelay);
     }
 }

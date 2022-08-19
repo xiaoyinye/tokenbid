@@ -26,7 +26,7 @@ public class AuctionService implements IService<Auction> {
 
     @Autowired
     public AuctionService(AuctionRepository auctionRepository, EmailUtil emailUtil, ItemService itemService,
-                          BidService bidService, UserService userService) {
+            BidService bidService, UserService userService) {
         this.auctionRepository = auctionRepository;
         this.emailUtil = emailUtil;
         this.itemService = itemService;
@@ -41,7 +41,7 @@ public class AuctionService implements IService<Auction> {
 
     @Override
     public void update(Auction auction) {
-        logger.debug("Updating auction with auction ID: "+auction.getAuctionId());
+        logger.debug("Updating auction with auction ID: " + auction.getAuctionId());
         if (auctionRepository.findById(auction.getAuctionId()).isPresent()) {
             auctionRepository.save(auction);
             Item item = itemService.getById(auction.getItemId());
@@ -79,7 +79,7 @@ public class AuctionService implements IService<Auction> {
         item.setUserId(buyer.getUserId());
         itemService.update(item);
 
-       logger.debug("tokens added to seller");
+        logger.debug("tokens added to seller");
         seller.setTokens(seller.getTokens() + bid.getBid());
 
         logger.debug("delete all bids for this auction");
@@ -110,8 +110,8 @@ public class AuctionService implements IService<Auction> {
      * @return A list of auctions with an end time less than 1 hour from the current
      *         time
      */
-    public List<Auction> getAuctionsEndingInOneHour() {
-        return auctionRepository.findAuctionsEndingInNextHour();
+    public List<Auction> getAuctionsEndingInHalfAnHour() {
+        return auctionRepository.findAuctionsEndingInNextHalfAnHour();
     }
 
     /**

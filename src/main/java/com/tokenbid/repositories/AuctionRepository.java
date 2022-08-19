@@ -12,10 +12,11 @@ import java.util.List;
 public interface AuctionRepository extends JpaRepository<Auction, Integer> {
 
     /**
-     * @return A list of auctions that have an end time less than 1hour from now
+     * @return A list of auctions that have an end time less than half an hour from
+     *         now
      */
-    @Query(value = "SELECT * FROM auctions WHERE status = 'In Progress' AND end_time < (NOW() + INTERVAL '1 hour') ORDER BY end_time ASC", nativeQuery = true)
-    List<Auction> findAuctionsEndingInNextHour();
+    @Query(value = "SELECT * FROM auctions WHERE status = 'In Progress' AND end_time < (NOW() + INTERVAL '0.5 hour') ORDER BY end_time ASC", nativeQuery = true)
+    List<Auction> findAuctionsEndingInNextHalfAnHour();
 
     /**
      * @return A list of auctions that have an 'In Progress' status and haven't
