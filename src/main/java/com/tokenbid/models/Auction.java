@@ -29,12 +29,6 @@ public class Auction {
     @Column(name = "starting_bid")
     private int startingBid;
 
-    @Column(name = "current_bid")
-    private int currentBid;
-
-    @Column(name = "previous_bid")
-    private int previousBid;
-
     @Column(name = "status")
     private String status = "In Progress";
 

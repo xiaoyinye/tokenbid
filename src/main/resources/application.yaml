@@ -1,1 +1,29 @@
+server:
+  port: 5000
+spring:
+  datasource:
+    username: postgres
+    password: 1121Revature
+    url: jdbc:postgresql://revature-db.cn6l9mwmtabj.us-east-1.rds.amazonaws.com:5432/tokenbid
+    driver-class-name: org.postgresql.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: exceptions.tokenbid@gmail.com
+    password: dfcdfdazolbitwda
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.gmail.com
 
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
