@@ -311,6 +311,13 @@ async function populateAuctionsContainer(auctionsContainer) {
     }
   }
 
+  if (items.length === 0) {
+    auctionsContainer.textContent = 'No ongoing auctions...';
+    auctionsContainer.style.color = 'white';
+    auctionsContainer.style.textAlign = 'center';
+    return;
+  }
+
   // Add each item to the auctions container
   auctionsContainer.textContent = ''; // remove all children
   for (let i = 0; i < items.length; i++) {
